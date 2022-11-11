@@ -1,10 +1,94 @@
-\documentclass[10pt,a4paper]{book}
-\usepackage[utf8]{inputenc}
+\documentclass[12pt,a4paper]{report}
+\usepackage[left=3.00cm, right=2.00cm, top=2.00cm, bottom=2.00cm]{geometry}
+\usepackage{vntex}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{graphicx}
-\title{Nghiên cứu giải pháp đảm bảo an toàn dữ liệu trên kubernetes}
-\author{Đặng Sơn Hà and Nguyễn Anh Tuấn}
+\author{LHD}
+\newcommand{\nocontentsline}[3]{}
+\newcommand{\tocless}[2]{\bgroup\let\addcontentsline=\nocontentsline#1{#2}\egroup}
+\author{LHD}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\title{Đề cương Ver 1}
+
 \begin{document}
+	\begin{titlepage}
+		\begin{tikzpicture}[remember picture,overlay,inner sep=0,outer sep=0]
+			\draw[blue!70!black,line width=4pt] ([xshift=-1.5cm,yshift=-2cm]current page.north east) coordinate (A)--([xshift=1.5cm,yshift=-2cm]current page.north west) coordinate(B)--([xshift=1.5cm,yshift=2cm]current page.south west) coordinate (C)--([xshift=-1.5cm,yshift=2cm]current page.south east) coordinate(D)--cycle;
+			
+			\draw ([yshift=0.5cm,xshift=-0.5cm]A)-- ([yshift=0.5cm,xshift=0.5cm]B)--
+			([yshift=-0.5cm,xshift=0.5cm]B) --([yshift=-0.5cm,xshift=-0.5cm]B)--([yshift=0.5cm,xshift=-0.5cm]C)--([yshift=0.5cm,xshift=0.5cm]C)--([yshift=-0.5cm,xshift=0.5cm]C)-- ([yshift=-0.5cm,xshift=-0.5cm]D)--([yshift=0.5cm,xshift=-0.5cm]D)--([yshift=0.5cm,xshift=0.5cm]D)--([yshift=-0.5cm,xshift=0.5cm]A)--([yshift=-0.5cm,xshift=-0.5cm]A)--([yshift=0.5cm,xshift=-0.5cm]A);
+			
+			
+			\draw ([yshift=-0.3cm,xshift=0.3cm]A)-- ([yshift=-0.3cm,xshift=-0.3cm]B)--
+			([yshift=0.3cm,xshift=-0.3cm]B) --([yshift=0.3cm,xshift=0.3cm]B)--([yshift=-0.3cm,xshift=0.3cm]C)--([yshift=-0.3cm,xshift=-0.3cm]C)--([yshift=0.3cm,xshift=-0.3cm]C)-- ([yshift=0.3cm,xshift=0.3cm]D)--([yshift=-0.3cm,xshift=0.3cm]D)--([yshift=-0.3cm,xshift=-0.3cm]D)--([yshift=0.3cm,xshift=-0.3cm]A)--([yshift=0.3cm,xshift=0.3cm]A)--([yshift=-0.3cm,xshift=0.3cm]A);
+			
+		\end{tikzpicture}
+		\begin{center}
+			BAN CƠ YẾU CHÍNH PHỦ\\
+			\textbf{HỌC VIỆN KỸ THUẬT MẬT MÃ}
+		\end{center}
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.25\linewidth]{"Pics/Logo HV"}
+			\label{fig:logo-hv}
+		\end{figure}
+		
+		\begin{center}
+			{\Huge ĐỀ CƯƠNG\\}
+			{\large CHUYÊN ĐỀ AN TOÀN HỆ THỐNG THÔNG TIN\\}
+			\textbf{Nghiên cứu giải pháp đảm bảo an toàn dữ liệu trên Kubernetes}
+		\end{center}
+		\bigskip
+		\begin{flushright}
+			\large{Ngành: An toàn thông tin}
+		\end{flushright}
+		\vspace{30mm}
+		\begin{flushleft}
+			\textit{Sinh viên thực hiện:}\\
+			\textbf{Nguyễn Anh Tuấn}\\
+			Mã sinh viên: AT160258\\
+			\textbf{Đặng Sơn Hà}\\
+			Mã sinh viên: AT160220
+			\bigskip\\
+			\textit{Người hướng dẫn:}\\
+			\textbf{TS. Nguyễn Mạnh Thắng}\\
+			Khoa An toàn thông tin - Học viện Kỹ thuật mật mã
+		\end{flushleft}
+		\vfill
+		\begin{center}
+			Hà Nội, 2022
+		\end{center}
+		
+	\end{titlepage}
+	
+	\tableofcontents
+	
+	\chapter*{\centering Lời cảm ơn}
+	\addcontentsline{toc}{chapter}{Lời cảm ơn}
+	\hspace{1cm}Nhóm chúng em xin chân thành cảm ơn các thầy cô trường Học viện Kỹ thuật Mật mã nói chung, quý thầy cô của khoa An toàn thông tin nói riêng đã tận tình dạy bảo, truyền đạt kiến thức cho chúng em trong suốt quá trình học.\\
+	
+	\hspace{1cm} Kính gửi đến Thầy Nguyễn Mạnh Thắng lời cảm ơn chân thành và sâu sắc nhất, cảm ơn thầy đã tận tình theo sát, chỉ bảo và hướng dẫn cho nhóm em trong quá trình thực hiện đề tài này. Thầy không chỉ hướng dẫn chúng em những kiến thức chuyên ngành, mà còn giúp chúng em học thêm những kĩ năng mềm, tinh thần học hỏi, thái độ khi làm việc nhóm.\\
+	
+	\hspace{1cm}Trong quá trình tìm hiểu nhóm chúng em xin cảm ơn các bạn sinh viên đã góp ý, giúp đỡ và hỗ trợ nhóm em rất nhiều trong quá trình tìm hiểu và làm đề tài.\\
+	
+	\hspace{1cm}Do kiến thức còn nhiều hạn chế nên không thể tránh khỏi những thiếu sót trong quá trình làm đề tài.Chúng em rất mong nhận được sự đóng góp ý kiến của quý thầy cô để đề tài của chúng em đạt được kết quả tốt hơn.\\
+	\bigskip \\
+	\textbf{Chúng em xin chân thành cảm ơn!}
+	\chapter*{\centering Lời mở đầu}
+	\addcontentsline{toc}{chapter}{Lời mở đầu}
+	\hspace{1cm}{Trong những năm gần đây, Kubernetes đã trở thành một trong những công cụ quản lý container phổ biến nhất. Điều này là do sự phát triển mạnh mẽ của Kubernetes, cũng như sự phổ biến của container. Trong các doanh nghiệp hiện nay, Kubernetes là một phần không thể thiếu được sử dụng để quản lý các ứng dụng container, cung cấp các dịch vụ như load balancing, autoscaling, logging, monitoring, backup và restore, cũng như quản lý các tài nguyên của các ứng dụng như CPU, Memory, Storage, Network. Tuy nhiên, việc sử dụng Kubernetes cũng có những hạn chế, đặc biệt là trong việc quản lý các cấu hình nhạy cảm của ứng dụng và các tài nguyên của ứng dụng. Vì vậy, trong đề tài này, chúng ta sẽ tìm hiểu về Vault, một công cụ quản lý secret phổ biến nhất hiện nay, được phát triển bởi HashiCorp. \\}
+	
+	{\hspace{0.3cm}Vault được sử dụng để quản lý các secret như username, password, token, key, certificate, API key, SSH key, license key, database connection và các thông tin khác. Vì vậy trong tương lai, Vault sẽ là một trong những công cụ quản lý secret không thể thiếu trong Kubernetes.\\}
+	
+	\hspace{0.3cm}Với những lí do trên, bài toán đặt ra ở đây là làm sao để triển khai Vault trên cụm Kubernetes. Vậy nên, đề tài “Nghiên cứu giải pháp đảm bảo an toàn dữ liệu trên K8S” được thực hiện trong báo cáo có ý nghĩa khoa học và mang tính thực tiễn cao.\\
+	
+	\chapter{Giới thiệu về Kurbenetes}
+	\section{Tổng quan về Kurbenetes}
+	\hspace{1cm}{Kurbenetes là một nền tảng mã nguồn mở di động, có thể để quản lý khối lượng công việc và dịch vụ chứa trong container, tạo điều kiện cho cấu hình cả cấu hình khai báo(declarative configuration) và tự động hoá. Nó có một hệ sinh thái lớn, phát triển nhanh chóng. Các dịch vụ, hỗ trợ và công cụ của Kurbenetes được phổ biến rộng rãi.\\}
+	
+	\hspace{0.3cm}{tetsdfasdffasdfsa fasdfs dà sad sadf sàasdf. \\}
+	\subsection{title}
 	
 \end{document}
