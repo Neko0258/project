@@ -2,4 +2,6 @@
 \contentsline {chapter}{Lời mở đầu}{3}{}%
 \contentsline {chapter}{\numberline {1}Giới thiệu về Kurbenetes}{4}{}%
 \contentsline {section}{\numberline {1.1}Tổng quan về Kurbenetes}{4}{}%
-\contentsline {subsection}{\numberline {1.1.1}title}{4}{}%
+\contentsline {subsection}{\numberline {1.1.1}Các thành phần trong kubernetes}{4}{}%
+\contentsline {subsubsection}{Các thành phần Control Plane (Master)}{5}{}%
+\contentsline {subsubsection}{Các thành phần Worker}{7}{}%
