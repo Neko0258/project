@@ -1,12 +1,41 @@
 \documentclass[12pt,a4paper]{report}
 \usepackage[left=3.00cm, right=2.00cm, top=2.00cm, bottom=2.00cm]{geometry}
 \usepackage{vntex}
+\usepackage{listings}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{graphicx}
 \newcommand{\nocontentsline}[3]{}
 \newcommand{\tocless}[2]{\bgroup\let\addcontentsline=\nocontentsline#1{#2}\egroup}
 \author{DSH + NAT}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2
+}
+
+\lstset{style=mystyle}
 \usepackage{tikz}
 \usetikzlibrary{calc}
 \title{Đề cương chi tiết Ver 1}
@@ -188,4 +217,256 @@
 		\subitem
 		Là phần mềm chịu trách nhiệm chạy các container. Kubernetes hỗ trợ một số container runtime như: Docker, containerd, CRI-O và bất kỳ triển khai nào của Kubernetes CRI (Container Runtime Interface).
 	\end{itemize}
+<<<<<<< Updated upstream
+=======
+	
+	\section{Các đối tượng trong Kubernetes}
+	\smallskip
+	\subsection{Giới thiệu các đối tượng trong Kubernetes}
+	\smallskip
+	\hspace{1cm}{Các đối tượng Kubernetes là các thực thể liên tục trong hệ thống Kubernetes. Kubernetes sử dụng các thực thể này để biểu thị trạng thái của cụm của bạn. Cụ thể, có thể mô tả:}
+	\begin{itemize}
+		\item Những ứng dụng được đóng gói nào đang chạy (và chạy trên các node nào).
+		\item Các tài nguyên có sẵn cho các ứng dụng đó.
+		\item Các chính sách xung quanh cách các ứng dụng đó hoạt động, chẳng hạn như chính sách khởi động lại, nâng cấp và khả năng chịu lỗi.
+	\end{itemize}
+	\hspace{0.3cm}{Đối tượng Kubernetes là một "bản ghi mục đich" - khi tạo đối tượng, hệ thống Kubernetes sẽ liên tục hoạt động để đảm bảo đối tượng đó tồn tại. Bằng cách tạo một đối tượng, bạn đang nói cho hệ thống Kubernetes biết bạn muốn khối lượng công việc của cụm trông như thế nào, đây là trạng thái mong muốn của cụm của bạn.\\}
+	
+	\hspace{0.3cm}{Để làm việc với các đối tượng Kubernetes dù là tạo, sửa đổi hay xóa chúng, sẽ cần sử dụng Kubernetes API. Ví dụ: khi bạn sử dụng giao diện dòng lệnh \texttt{kubectl}, CLI sẽ thực hiện các lệnh gọi API Kubernetes cần thiết cho bạn. Bạn cũng có thể sử dụng Kubernetes API trực tiếp trong các chương trình của riêng mình bằng cách sử dụng một trong các Thư viện máy khách.}
+	
+	\subsubsection{Đối tượng spec và status}
+	\smallskip
+	\hspace{1cm}{Hầu hết mọi đối tượng Kubernetes đều bao gồm hai trường đối tượng lồng nhau chi phối cấu hình của đối tượng: đối tượng \texttt{spec} và đối tượng \texttt{status}. Đối với mỗi đối tượng,phải đặt \texttt{spec} khi khởi tạo, cung cấp mô tả về các đặc điểm muốn tài nguyên có: được gọi là trạng thái mong muốn của đối tượng.\\}
+	
+	\hspace{0.3cm}{\texttt{status} mô tả trạng thái hiện tại của đối tượng, được cung cấp và cập nhật bởi hệ thống Kubernetes và các thành phần của nó. Control plane Kubenertes liên tục và tích cực quản lý trạng thái thực tế của mọi đối tượng để phù hợp với trạng thái mong muốn đã cung cấp.\\}
+	
+	\hspace{0.3cm}{\textbf{Ví dụ}: trong Kubernetes, Deployment là một đối tượng có thể đại diện cho một ứng dụng đang chạy trên cụm của bạn đảm nhận việc deploy và quản lý ứng dụng. Khi bạn tạo Deployment, bạn có thể đặt \texttt{spec} cho Deployment để chỉ định rằng bạn muốn chạy ba bản sao của ứng dụng. Hệ thống Kubernetes đọc thông số kỹ thuật Deployment và bắt đầu ba phiên bản của ứng dụng bạn mong muốn, cập nhật trạng thái để phù hợp với thông số kỹ thuật của bạn. Nếu bất kỳ trường hợp nào trong số đó không thành công (thay đổi trạng thái), hệ thống Kubernetes sẽ phản hồi sự khác biệt giữa thông số kỹ thuật và trạng thái bằng cách thực hiện chỉnh sửa. Lúc này,hệ thống Kubenertes bắt đầu một trường hợp thay thế khác.}
+	
+	\subsubsection{Mô tả một đối tượng Kubernetes}
+	\smallskip
+	\hspace{1cm}{Khi tạo một đối tượng trong Kubernetes phải cung cấp thông số đối tượng mô tả trạng thái mong muốn của nó, cũng như một số thông tin cơ bản về đối tượng (chẳng hạn như tên). Khi bạn sử dụng API Kubernetes để tạo đối tượng (trực tiếp hoặc thông qua \texttt{kubectl}), yêu cầu API đó phải bao gồm thông tin đó dưới dạng JSON trong phần thân yêu cầu. Thông thường, bạn cung cấp thông tin cho \texttt{kubectl} trong tệp .yaml. \texttt{kubectl} chuyển đổi thông tin thành JSON khi thực hiện yêu cầu API.\\}
+	
+	\hspace{0.3cm}{Đây là một tệp .yaml ví dụ hiển thị các trường bắt buộc và thông số đối tượng cho một Kubernetes Deployment:\\}
+	
+\begin{lstlisting}[language=Bash]
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  spec:
+    selector:
+      matchLabels:
+        app: nginx
+    replicas: 2 #tells deployment to run 2 pods matching the template
+    template:
+      metadata:
+        labels:
+          app: nginx
+      spec:
+        containers:
+         - name: nginx
+           image: nginx:1.14.2
+           ports:
+            - containerPort: 80
+\end{lstlisting}
+	
+	\smallskip
+	\hspace{0.3cm}{Một cách để tạo Deployment bằng tệp .yaml như trên là sử dụng lệnh \texttt{kubectl apply} trong giao diện dòng lệnh \texttt{kubectl}, chuyển tệp .yaml dưới dạng đối số. Đây là một ví dụ:\\}	
+	\shellcmd{kubectl apply -f https://k8s.io/examples/application/deployment.yaml}
+	
+	\hspace{0.3cm}{Đầu ra tương tự như thế này:\\}
+	\shellcmd{deployment.apps/nginx-deployment created}
+	
+	\subsubsection{Phần bắt buộc}
+	\hspace{1cm}{Trong tệp .yaml dành cho đối tượng Kubernetes muốn tạo, sẽ cần đặt giá trị cho các trường sau:}
+	\begin{itemize}
+		\item \texttt{apiVersion}- Phiên bản Kubernetes API nào sử dụng để tạo đối tượng này.
+		\item \texttt{kind}- Loại đối tượng bạn muốn tạo.
+		\item \texttt{metadata}- Dữ liệu giúp nhận dạng duy nhất đối tượng, bao gồm \texttt{name} chuỗi \texttt{UID}, và tùy chọn \texttt{namespace}.
+		\item \texttt{spec}- Trạng thái bạn mong muốn cho đối tượng
+	\end{itemize}
+	\hspace{0.3cm}{Định dạng chính xác của đối tượng \texttt{spec} là khác nhau đối với mọi đối tượng Kubernetes và chứa các trường lồng nhau dành riêng cho đối tượng đó.}
+	
+	\subsection{Quản lý các đối tượng trong Kubernetes}
+	\smallskip
+	\hspace{1cm}{Công cụ dòng lệnh \texttt{kubectl} hỗ trợ một số cách khác nhau để tạo và quản lý các đối tượng Kubernetes. Tài liệu này cung cấp một cái nhìn tổng quan về các cách tiếp cận khác nhau.}
+	
+	\textbf{Kỹ thuật quản lý:} 
+	Một đối tượng Kubernetes chỉ nên được quản lý bằng một kỹ thuật. Các kỹ thuật trộn lẫn và kết hợp cho cùng một đối tượng dẫn đến hành vi không xác định.
+	
+	\begin{table}
+		\centering
+		\begin{tabular}{|c|c|c|l} 
+			\hhline{|---~}
+			{\cellcolor[rgb]{0.753,0.753,0.753}}Kỹ thuât quản lý            & {\cellcolor[rgb]{0.753,0.753,0.753}}Hoạt động trên & {\cellcolor[rgb]{0.753,0.753,0.753}}Môi trường đề xuất &   \\ 
+			\hhline{|---~}
+			{\cellcolor[rgb]{0.937,0.937,0.937}}Dòng lệnh bắt buộc          & Đối tượng trực tiếp                                & Dự án phát triển                                       &   \\ 
+			\hhline{|---~}
+			{\cellcolor[rgb]{0.937,0.937,0.937}}Cấu hình đối tượng bắt buộc & Các tệp riêng lẻ                                   & Dự án sản xuất                                         &   \\ 
+			\hhline{|---~}
+			{\cellcolor[rgb]{0.937,0.937,0.937}}Cấu hình đối tượng khai báo & Thư mục của tập tin                                & Dự án sản xuất                                         &   \\
+			\hhline{|---~}
+		\end{tabular}
+	\end{table}
+	
+	\subsubsection{Dòng lệnh bắt buộc}
+	\smallskip
+	\hspace{1cm}{Khi sử dụng các dòng lệnh bắt buộc, người dùng thao tác trực tiếp trên các đối tượng trực tiếp trong một cụm. Người dùng cung cấp các hoạt động cho lệnh \texttt{kubectl} dưới dạng đối số hoặc cờ.\\}
+	
+	\hspace{0.3cm}{Đây là cách được đề xuất để bắt đầu hoặc chạy tác vụ một lần trong cụm. Vì kỹ thuật này hoạt động trực tiếp trên các đối tượng trực tiếp nên nó không cung cấp lịch sử của các cấu hình trước đó. \\}
+	
+	\hspace{0.3cm}{\textbf{Ví dụ:} Chạy một phiên bản nginx container bằng cách tạo một đối tượng Deployment: \\}
+	\shellcmd{kubectl create deployment nginx --image nginx}
+	
+	\hspace{0.3cm}{\textbf{So sánh:}}
+	\begin{itemize}
+		\item Ưu điểm so với cấu hình đối tượng:
+		\begin{itemize}
+			\item Các lệnh được thể hiện dưới dạng một từ hành động.
+			\item Các lệnh chỉ yêu cầu một bước duy nhất để thực hiện các thay đổi đối với cụm.
+		\end{itemize}
+		\item Nhược điểm so với cấu hình đối tượng:
+		\begin{itemize}
+			\item Các lệnh không tích hợp với các quy trình xem xét thay đổi.
+			\item Các lệnh không cung cấp dấu vết kiểm tra liên quan đến các thay đổi.
+			\item Các lệnh không cung cấp nguồn bản ghi ngoại trừ những gì đang hoạt động.
+			\item Các lệnh không cung cấp mẫu để tạo đối tượng mới.
+		\end{itemize}
+	\end{itemize}
+	
+	\subsubsection{Cấu hình đối tượng bắt buộc}
+	\smallskip
+	\hspace{1cm}{Trong cấu hình đối tượng bắt buộc, lệnh \texttt{kubectl} chỉ định thao tác (tạo, thay thế, v.v.), các cờ tùy chọn và ít nhất một tên tệp. Tệp được chỉ định phải chứa định nghĩa đầy đủ về đối tượng ở định dạng YAML hoặc JSON.}
+	
+	\hspace{0.3cm}{\textbf{Ví dụ:} Tạo các đối tượng được xác định trong tệp cấu hình: \\}
+	\shellcmd{kubectl create -f nginx.yaml \\}
+	Xóa các đối tượng được xác định trong hai tệp cấu hình:\\
+	\shellcmd{kubectl delete -f nginx.yaml -f redis.yaml\\}
+	Cập nhật các đối tượng được xác định trong tệp cấu hình bằng cách ghi đè lên cấu hình trực tiếp:\\
+	\shellcmd{kubectl replace -f nginx.yaml}
+	
+	\hspace{0.3cm}{\textbf{So sánh:}}
+	\begin{itemize}
+		\item Ưu điểm so với dòng lệnh bắt buộc:
+		\begin{itemize}
+			\item Cấu hình đối tượng có thể được lưu trữ trong một hệ thống kiểm soát nguồn như Git.
+			\item Cấu hình đối tượng có thể tích hợp với các quy trình như xem xét các thay đổi trước khi đẩy và theo dõi kiểm tra.
+			\item Cấu hình đối tượng cung cấp một mẫu để tạo các đối tượng mới.
+		\end{itemize}
+		\item Nhược điểm so với dòng lệnh bắt buộc:
+		\begin{itemize}
+			\item Cấu hình đối tượng yêu cầu hiểu biết cơ bản về lược đồ đối tượng.
+			\item Cấu hình đối tượng yêu cầu thêm bước ghi tệp YAML.
+		\end{itemize}
+		\item Ưu điểm so với cấu hình đối tượng khai báo:
+		\begin{itemize}
+			\item Hành vi cấu hình đối tượng bắt buộc đơn giản hơn và dễ hiểu hơn.
+			\item Kể từ phiên bản Kubernetes 1.5, cấu hình đối tượng bắt buộc đã hoàn thiện hơn.
+		\end{itemize}
+		\item Nhược điểm so với cấu hình đối tượng khai báo:
+		\begin{itemize}
+			\item Cấu hình đối tượng bắt buộc hoạt động tốt nhất trên tệp chứ không phải thư mục.
+			\item Các bản cập nhật cho các đối tượng trực tiếp phải được phản ánh trong các tệp cấu hình, nếu không chúng sẽ bị mất trong lần thay thế tiếp theo.
+		\end{itemize}
+	\end{itemize}
+	
+	\subsubsection{Cấu hình đối tượng khai báo}
+	\smallskip
+	\hspace{1cm}{Khi sử dụng cấu hình đối tượng khai báo, người dùng thao tác trên tệp cấu hình đối tượng được lưu trữ cục bộ, tuy nhiên người dùng không xác định các thao tác được thực hiện trên tệp. Các hoạt động tạo, cập nhật và xóa được tự động phát hiện trên mỗi đối tượng bởi \texttt{kubectl}. Điều này cho phép làm việc trên các thư mục, nơi có thể cần các thao tác khác nhau cho các đối tượng khác nhau.\\}
+	
+	\hspace{0.8cm}{Lưu ý: Cấu hình đối tượng khai báo giữ lại các thay đổi do người viết khác thực hiện, ngay cả khi các thay đổi không được hợp nhất trở lại tệp cấu hình đối tượng. Điều này có thể thực hiện được bằng cách sử dụng thao tác \texttt{patch} API để chỉ ghi những điểm khác biệt được quan sát, thay vì sử dụng thao tác \texttt{replace} API để thay thế toàn bộ cấu hình đối tượng.\\}
+	
+	\hspace{0.3cm}{\textbf{Ví dụ:} Xử lý tất cả các tệp cấu hình đối tượng trong thư mục \texttt{configs} và tạo hoặc vá các đối tượng trực tiếp. Trước tiên, bạn có thể \texttt{diff} xem những thay đổi nào sẽ được thực hiện, sau đó áp dụng: \\}
+	\shellcmd{kubectl diff -f configs/}
+	\shellcmd{kubectl apply -f configs/ \\}
+	\noindent Xử lý đệ quy các thư mục:\\
+	\shellcmd{kubectl diff -R -f configs/}
+	\shellcmd{kubectl apply -R -f configs/}
+		
+	\hspace{0.3cm}{\textbf{So sánh:}}
+	\begin{itemize}
+		\item Ưu điểm so với cấu hình đối tượng bắt buộc:
+		\begin{itemize}
+			\item Các thay đổi được thực hiện trực tiếp đối với các đối tượng trực tiếp được giữ lại, ngay cả khi chúng không được hợp nhất lại vào các tệp cấu hình.
+			\item Cấu hình đối tượng khai báo hỗ trợ tốt hơn cho hoạt động trên các thư mục và tự động phát hiện các loại hoạt động (tạo, vá, xóa) cho mỗi đối tượng.
+		\end{itemize}
+		\item Nhược điểm so với cấu hình đối tượng bắt buộc:
+		\begin{itemize}
+			\item Cấu hình đối tượng khai báo khó gỡ lỗi và hiểu kết quả hơn khi chúng không được như mong muốn.
+			\item Cập nhật một phần bằng cách sử dụng khác biệt tạo ra các hoạt động hợp nhất và vá lỗi phức tạp.
+		\end{itemize}
+	\end{itemize}
+	
+	\subsection{Tên và ID của các đối tượng trong kubernetes}
+	\smallskip
+	\hspace{1cm}{Mỗi đối tượng trong cụm của có một Tên duy nhất cho loại tài nguyên đó. Mỗi đối tượng Kubernetes cũng có một UID duy nhất trên toàn bộ cụm.\\}
+	
+	\hspace{0.3cm}{\textbf{Ví dụ}: bạn chỉ có thể có một Pod được đặt tên \texttt{myapp-1234} trong cùng một không gian tên nhưng bạn có thể có một Pod và một Deployment được đặt tên riêng \texttt{myapp-1234}.\\}
+	
+	\hspace{0.3cm}{Đối với các thuộc tính không phải duy nhất do người dùng khai báo, Kubernetes cung cấp nhãn và chú thích.}
+	
+	\subsubsection{Tên}
+	\smallskip
+	\hspace{1cm}{là chuỗi do máy khách khai báo đề cập đến một đối tượng trong URL tài nguyên, chẳng hạn như \texttt{/api/v1/pods/some-name}.\\}
+	
+	\hspace{0.3cm}{Tại một thời điểm, chỉ một đối tượng của một loại nhất định có thể có một tên nhất định. Tuy nhiên, nếu bạn xóa đối tượng, bạn có thể tạo một đối tượng mới có cùng tên.\\}
+	
+	\hspace{0.3cm}{\textbf{Lưu ý}: Trong trường hợp các đối tượng đại diện cho một thực thể vật lý, chẳng hạn như Node đại diện cho máy chủ vật lý, khi máy chủ được tạo lại dưới cùng tên mà không xóa và tạo lại Node, Kubernetes coi máy chủ mới là máy chủ cũ, điều này có thể dẫn đến sự không thống nhất.\\}
+	
+	\hspace{0.3cm}{Dưới đây là bốn loại ràng buộc tên thường được sử dụng cho tài nguyên.}
+	
+	\begin{itemize}
+		\item \textbf{Tên miền phụ DNS}
+		\subitem Hầu hết các loại tài nguyên yêu cầu một tên có thể được sử dụng làm tên miền phụ DNS như được định nghĩa trong RFC 1123 . Điều này có nghĩa là tên phải:
+		\begin{itemize}
+			\item chứa không quá 253 ký tự
+			\item chỉ chứa các ký tự chữ và số viết thường, '-' hoặc '.'
+			\item bắt đầu bằng một ký tự chữ và số
+			\item kết thúc bằng một ký tự chữ và số
+		\end{itemize}
+	
+		\item \textbf{Tên nhãn RFC 1123}
+		\subitem Một số loại tài nguyên yêu cầu tên của chúng tuân theo tiêu chuẩn nhãn DNS như được định nghĩa trong RFC 1123 . Điều này có nghĩa là tên phải:
+		\begin{itemize}
+			\item chứa tối đa 63 ký tự
+			\item chỉ chứa các ký tự chữ và số viết thường hoặc '-'
+			\item bắt đầu bằng một ký tự chữ và số
+			\item kết thúc bằng một ký tự chữ và số
+		\end{itemize}
+	
+		\item \textbf{Tên đoạn đường dẫn}
+		\subitem Một số loại tài nguyên yêu cầu tên của chúng để có thể được mã hóa an toàn dưới dạng đoạn đường dẫn. Nói cách khác, tên có thể không phải là "." hoặc ".." và tên không được chứa "/" hoặc "\%".
+		\subitem Đây là một bảng kê khai ví dụ cho một Pod có tên \texttt{nginx-demo}.
+		\smallskip
+\begin{lstlisting}[language=Bash]
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-demo
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.14.2
+    ports:
+    - containerPort: 80
+\end{lstlisting}
+	\smallskip
+	\subitem \textbf{Lưu ý}: Một số loại tài nguyên có các hạn chế bổ sung về tên của chúng.
+	\end{itemize}
+	
+	\subsubsection{UID}
+	\smallskip
+	\hspace{1cm}{Một chuỗi do hệ thống Kubernetes tạo để xác định duy nhất các đối tượng.\\}
+	
+	\hspace{0.3cm}{Mọi đối tượng được tạo trong toàn bộ thời gian tồn tại của cụm Kubernetes đều có một UID riêng biệt. Nó nhằm mục đích phân biệt giữa các lịch sử các lần xuất hiện của những thực thể tương đồng.\\}
+	
+	\hspace{0.3cm}{Kubernetes UID là các định danh duy nhất trên toàn cầu (còn được gọi là UUID). UUID được chuẩn hóa theo tiêu chuẩn ISO/IEC 9834-8 và ITU-T X.667.}
+	
+	\section{Kiến trúc của cụm}
+	\smallskip
+	\subsection{Node}
+	\smallskip
+	
+	\subsection{Giao tiếp giữa các Node và Control Plane}
+>>>>>>> Stashed changes
 \end{document}
