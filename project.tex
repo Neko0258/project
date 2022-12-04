@@ -5,6 +5,10 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{colortbl}
+\usepackage{hhline}
+\newcommand{\shellcmd}[1]{\\\indent\indent\texttt{\footnotesize\# #1}\\}
 \newcommand{\nocontentsline}[3]{}
 \newcommand{\tocless}[2]{\bgroup\let\addcontentsline=\nocontentsline#1{#2}\egroup}
 \newcommand{\shellcmd}[1]{\\\indent\indent\texttt{\footnotesize\# #1}\\}
@@ -176,11 +180,15 @@
 	\subitem Một số loại bộ điều khiển có thể kể đến:
 	\begin{itemize}
 		\item Node controller: Chịu trách nhiệm thông báo và phản hồi khi các Node gặp sự cố.
+
 		
-		\item Job controller: Kiểm soát các tác vụ được lập lịch, sau đó tạo các Pod để chạy các tác vụ đó đến khi hoàn thành.
+		\item \textbf{Etcd:}
+		\subitem
+		Etcd là Kho lưu trữ giá trị khóa nhất quán và có tính khả dụng cao được sử dụng làm kho dự phòng để lưu trữ toàn bộ cấu hình, trạng thái và metadata của Kubernetes Cluster.
 		
-		\item Endpoints controller: Điền khiển đối tượng Điểm cuối (nghĩa là tham gia Dịch vụ \& Nhóm).
+		\hspace{0.8cm}{Trong các cluster nhỏ, Etcd có thể chạy trên cùng một Node với các thành phần khác. Nhưng trong các cluster lớn, Etcd có thể chạy dự phòng trên nhiều Node để đảm bảo tính khả dụng của toàn hệ thống. Nếu cụm Kubernetes của bạn sử dụng Etcd làm nơi lưu trữ sao lưu, hãy đảm bảo rằng bạn có kế hoạch sao lưu cho những dữ liệu đó.}
 		
+
 		\item Service Account \& Token controllers: Tạo tài khoản mặc định và mã thông báo truy cập API cho không gian tên mới.
 	\end{itemize}
 
@@ -207,6 +215,7 @@
 	\smallskip
 	\subitem Các yếu tố được tính đến để đưa ra quyết định lập lịch bao gồm: yêu cầu tài nguyên cá nhân và tập thể, các ràng buộc về phần cứng / phần mềm / chính sách, thông số kỹ thuật về mối quan hệ và chống mối quan hệ, vị trí dữ liệu, can thiệp giữa khối lượng công việc và thời hạn.
 	\end{itemize}
+
 
 	\subsubsection{Các thành phần Worker}
 	\smallskip
@@ -294,6 +303,7 @@ metadata:
 		\item \texttt{spec}- Trạng thái bạn mong muốn cho đối tượng
 	\end{itemize}
 	\hspace{0.3cm}{Định dạng chính xác của đối tượng \texttt{spec} là khác nhau đối với mọi đối tượng Kubernetes và chứa các trường lồng nhau dành riêng cho đối tượng đó.}
+
 	
 	\subsection{Quản lý các đối tượng trong Kubernetes}
 	\smallskip
