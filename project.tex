@@ -11,12 +11,11 @@
 \newcommand{\shellcmd}[1]{\\\indent\indent\texttt{\footnotesize\# #1}\\}
 \newcommand{\nocontentsline}[3]{}
 \newcommand{\tocless}[2]{\bgroup\let\addcontentsline=\nocontentsline#1{#2}\egroup}
-\newcommand{\shellcmd}[1]{\\\indent\indent\texttt{\footnotesize\# #1}\\}
 \author{DSH + NAT}
 \usepackage{xcolor}
 \usepackage{colortbl}
 \usepackage{hhline}
-
+\setcounter{secnumdepth}{5}
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
@@ -784,8 +783,6 @@ spec:
 	\hspace{0.3cm}{Bạn có thể tìm các bộ điều khiển chạy bên ngoài control plane để mở rộng Kubernetes. Hoặc, nếu muốn, bạn có thể tự viết một bộ điều khiển mới. Bạn có thể chạy bộ điều khiển của riêng mình dưới dạng một bộ Pod hoặc bên ngoài Kubernetes. Những gì phù hợp nhất sẽ phụ thuộc vào chức năng của bộ điều khiển cụ thể đó.}
 	
 	\subsection{Quản lý controller cloud}
-<<<<<<< Updated upstream
-=======
 	
 	\hspace{1cm}{Các công nghệ cơ sở hạ tầng đám mây cho phép bạn chạy Kubernetes trên các đám mây công cộng, riêng tư và lai. Kubernetes tin tưởng vào tự động hóa, dựa trên cơ sở hạ tầng API mà không cần sự liên kết chặt chẽ giữa các thành phần.\\}
 	
@@ -1036,6 +1033,7 @@ rules:
 	\hspace{0.3cm}{Chính sách chỉ là một quy tắc ACL được đặt tên. Ví dụ: Chính xác "root" được tính hợp sẵn và cho phép truy cập vào tất cả các tài nguyên. Bạn có thể tạo bất kỳ số lượng chính sách được đặt tên nào với quyền kiểm soát chi tiết với các đường dẫn. Vault hoạt động ở chế độ được phép truy cập, nghĩa là hành động được phép trừ khi quyền truy cập được cấp thông qua chính sách một cách rõ ràng. Vì người dùng có thể có nhiều chính sách được liên kết, các hành động được phép thực hiện khi chính sách cho phép. Các chính sách được lưu trữ và quản lý bởi một kho chính sách nội bộ. Kho chính sách nội bộ này bị ảnh hưởng thông qua Backend Storage, luôn được gắn tại \textit{sys/}. \\}
 	
 	\hspace{0.3cm}{Sau khi quá trình xác thực diễn ra và phương thức xác thực cung cấp một tập hợp các chính sách áp dụng, một client token được tạo ra và quản lý bởi kho lưu trữ. Client token sẽ được sử dụng để thực hiện các yêu cầu trong tương lại. Phương thức client token này tương tự như cookie do trang web gửi khi người dùng đăng nhập. Tuỳ thuộc vào cấu hình phương thức xác thực, client token có thể có thời hạn liên kết với nó, và nó thể cần phải được gia hạn định kỳ để tránh mất hiệu lực.\\}
+
 	
 	\hspace{0.3cm}{Sau khi được xác thực, yêu cầu được thực hiện bằng cách cung cấp Client token. Client token được sử dụng để xác thực máy khách, đảm bảo rằng nó được xác thực trong khi tải các chính sách liên quan. Các chính sách được sử dụng để xác thực yêu cầu của máy khách. Các yêu cầu sau đó được hướng tới secret engine, thứ mà được xử lý tuỳ thuộc vào loại của nó. Khi mà các secret engine trả lại các secret, lõi sẽ đăng kí nó với trình quản lý hết hạn và đính kèm nó với ID cho hợp đồng. Máy khách sử dụng ID hợp đồng để có thể tạo mới hoặc là thu hồi các secret của họ. Trình quản lý hết hạn sẽ tự động thu hồi các secret nếu như một máy khách được cho phép hợp đồng thuê hết hạn. \\}
 	
@@ -1045,6 +1043,7 @@ rules:
 	\subsubsection{Các thành phần cơ bản}
 	
 	\hspace{1.0cm}{Để hiểu cách thức hoạt động của Vault, điều quan trọng là phải hiểu các phần cần thiết của Vault. Những phần này bao gồm quy trình xác thực người dùng hoặc máy, các công cụ bí mật có sẵn sau khi người dùng hoặc máy được xác thực, các chính sách quy định quyền truy cập vào các công cụ bí mật đó và các giao diện có sẵn để tương tác với Vault.}
+
 	
 	\begin{itemize}
 		\item \textbf{Đường dẫn}
@@ -1098,9 +1097,11 @@ rules:
 		\end{itemize}
 		\item \textbf{Giai đoạn 3 - Dọn dẹp}
 		\smallskip
+
 		\subitem Sau khi tương tác của người dùng hoàn tất, Vault cần dọn sạch token. Khi token hoặc thông tin xác thực khác được cung cấp bởi Vault, nó được liên kết với TTL hoặc "mượn". Hợp đồng mượn này có thể dựa trên thời gian, chẳng hạn như 24 giờ hoặc được xác định theo số lần sử dụng đã đặt. Sau khi hợp đồng thuê hết hạn, token sẽ bị thu hồi và thông tin đăng nhập được liên kết sẽ tự động bị xóa bởi Vault.
 		\subitem Hình 2.4 minh họa ví dụ về cơ sở dữ liệu, trong đó máy khách Vault cần quyền truy cập vào thông tin đăng nhập cơ sở dữ liệu để đọc dữ liệu bên trong cơ sở dữ liệu. Giai đoạn 1 của ví dụ này bao gồm cấu hình của phương pháp xác thực LDAP và Cloud, tạo chính sách và cấu hình công cụ bảo mật cơ sở dữ liệu. Ví dụ: khi ứng dụng khách Vault gửi yêu cầu xác thực bằng LDAP, quy trình công việc trong Giai đoạn 2 sẽ được thực thi. Máy khách nhận được token và yêu cầu thông tin đăng nhập cơ sở dữ liệu. Sau khi hoàn tất tương tác với máy khách, token sẽ hết hạn và thông tin đăng nhập cơ sở dữ liệu sẽ bị thu hồi.
 		\subitem Lưu ý rằng mục đích và triết lý của Vault là xây dựng bảo mật thành các quy trình tự động sử dụng thông tin đăng nhập tạm thời - cho dù là trong một khoảng thời gian cụ thể hay sử dụng một lần. Mục tiêu cuối cùng là di chuyển từ thông tin xác thực và danh tính tĩnh yêu cầu xoay thủ công định kì. Tuy nhiên, hãy nhớ rằng quy trình công việc này vẫn có thể được tận dụng cho các bí mật tĩnh.
+
 		\begin{figure}[h]
 			\centering
 			\includegraphics[width=1\textwidth]{"Pics/clean_up"}
@@ -1119,5 +1120,5 @@ rules:
 	\subsubsection{Tương tác của người quản trị}
 	\subsubsection{Tương tác về bảo mật và tuân thủ}
 	\subsubsection{Tương tác của ứng dụng}
->>>>>>> Stashed changes
+
 \end{document}
