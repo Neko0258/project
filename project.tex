@@ -534,7 +534,7 @@
 	\section{Tổng quan về microservice}
 	\hspace{1.0cm} {Microservices không còn là một điều mới lạ. Chúng ta đang thấy vi mô quy mô lớn triển khai dịch vụ với hàng ngàn dịch vụ. Nhưng cho dù có một hoặc hai dịch vụ hay hàng nghìn dịch vụ, bảo mật vẫn là ưu tiên hàng đầu.}
 	\subsection{Cách bảo mật hoạt động trong ứng dụng monolithic}
-	\hspace{1.0cm} {Một ứng dụng monolithic có một vài điểm kết nối. Một điểm vào cho một ứng dụng là một cánh cửa trong một tòa nhà. Giống như một cánh cửa cho phép bạn vào một tòa nhà (có thể sau khi kiểm tra an ninh), một điểm vào ứng dụng cho phép các yêu cầu của bạn vào.}
+	\hspace{1.0cm} {Một ứng dụng monolithic có một vài điểm kết nối. Một điểm vào cho một ứng dụng là một cánh cửa trong một tòa nhà. Giống như một cánh cửa cho phép bạn vào một tòa nhà (có thể sau khi kiểm tra an ninh), một điểm vào ứng dụng cho phép các yêu cầu của bạn vào. \\}
 	
 	\hspace{0.3cm}{Hãy nghĩ về một ứng dụng web chạy trên cổng HTTP mặc định 80 trên một máy chủ mang địa chỉ IP 192.168.0.1. Cổng 80 trên máy chủ 192.168.0.1 là một điểm vào ứng dụng web đó. Nếu cùng một ứng dụng web chấp nhận các yêu cầu HTTPS trên cùng một máy chủ trên cổng 443, thì sẽ có một điểm vào khác. Khi ứng dụng có nhiều điểm vào hơn, người quản trị có nhiều nơi hơn để lo lắng về việc bảo mật. Càng nhiều điểm vào một ứng dụng, bề mặt tấn công càng rộng.}
 	\begin{figure}[h]
@@ -548,7 +548,7 @@
 
 	\subsection{Nguyên tắc cơ bản trong bảo mật bảo mật microservice}
 	\subsubsection{Tính xác thực}
-	\hspace{1.0cm}{Xác thực là quá trình xác định bên yêu cầu để bảo vệ hệ thống của bạn chống giả mạo. Bên yêu cầu có thể là một hệ thống (một microservice) hoặc một hệ thống yêu cầu quyền truy cập thay mặt cho người dùng là con người hoặc một hệ thống khác. Tuy nhiên, rất khó có khả năng người dùng là con người sẽ truy cập trực tiếp vào một microservice. Trước khi tạo một thiết kế bảo mật cho một hệ thống nhất định, bạn cần xác định đối tượng. Phương pháp xác thực bạn chọn dựa trên đối tượng.}
+	\hspace{1.0cm}{Xác thực là quá trình xác định bên yêu cầu để bảo vệ hệ thống của bạn chống giả mạo. Bên yêu cầu có thể là một hệ thống (một microservice) hoặc một hệ thống yêu cầu quyền truy cập thay mặt cho người dùng là con người hoặc một hệ thống khác. Tuy nhiên, rất khó có khả năng người dùng là con người sẽ truy cập trực tiếp vào một microservice. Trước khi tạo một thiết kế bảo mật cho một hệ thống nhất định, bạn cần xác định đối tượng. Phương pháp xác thực bạn chọn dựa trên đối tượng.\\}
 	
 	\begin{figure}[h]
 		\centering
@@ -560,47 +560,47 @@
 	\hspace{0.3cm}{Để xác thực người dùng với một hệ thống (ví dụ: ứng dụng web), ứng dụng có thể yêu cầu tên người dùng và mật khẩu với một yếu tố khác cho xác thực đa yếu tố (MFA). MFA có bắt buộc hay không chủ yếu là do quyết định kinh doanh, dựa trên mức độ quan trọng của tài sản kinh doanh của bạn hoặc mức độ nhạy cảm của dữ liệu bạn muốn chia sẻ với người dùng.}
 
 	\subsubsection{Tính toàn vẹn}
-	\hspace{1.0cm}{Khi bạn truyền dữ liệu từ ứng dụng khách của mình sang một vi dịch vụ hoặc từ một vi dịch vụ này sang một vi dịch vụ khác—tùy thuộc vào độ mạnh của kênh liên lạc mà bạn chọn—kẻ xâm nhập có thể chặn liên lạc và thay đổi dữ liệu để có lợi cho chúng. Ví dụ: nếu kênh mang dữ liệu tương ứng với một đơn đặt hàng, thì kẻ xâm nhập có thể thay đổi địa chỉ giao hàng thành địa chỉ của chính họ. Các hệ thống được bảo vệ cho tính toàn vẹn không bỏ qua khả năng này; họ giới thiệu các biện pháp để nếu một tin nhắn bị thay đổi, người nhận có thể phát hiện và loại bỏ yêu cầu.}
+	\hspace{1.0cm}{Khi bạn truyền dữ liệu từ ứng dụng khách của mình sang một vi dịch vụ hoặc từ một vi dịch vụ này sang một vi dịch vụ khác—tùy thuộc vào độ mạnh của kênh liên lạc mà bạn chọn—kẻ xâm nhập có thể chặn liên lạc và thay đổi dữ liệu để có lợi cho chúng. Ví dụ: nếu kênh mang dữ liệu tương ứng với một đơn đặt hàng, thì kẻ xâm nhập có thể thay đổi địa chỉ giao hàng thành địa chỉ của chính họ. Các hệ thống được bảo vệ cho tính toàn vẹn không bỏ qua khả năng này; họ giới thiệu các biện pháp để nếu một tin nhắn bị thay đổi, người nhận có thể phát hiện và loại bỏ yêu cầu.\\}
 	
-	\hspace{0.3cm}{Cách phổ biến nhất để bảo vệ tính toàn vẹn của một thông điệp là ký tên vào nó.Mọi dữ liệu truyền qua kênh liên lạc được bảo vệ bằng Bảo mật tầng truyền tải (TLS) đều được bảo vệ toàn vẹn. Nếu chúng ta sử dụng HTTPS để liên lạc giữa các vi dịch vụ (trên thực tế, giao tiếp đó là HTTP qua TLS), thư sẽ được bảo vệ toàn vẹn trong khi truyền.}
+	\hspace{0.3cm}{Cách phổ biến nhất để bảo vệ tính toàn vẹn của một thông điệp là ký tên vào nó.Mọi dữ liệu truyền qua kênh liên lạc được bảo vệ bằng Bảo mật tầng truyền tải (TLS) đều được bảo vệ toàn vẹn. Nếu chúng ta sử dụng HTTPS để liên lạc giữa các vi dịch vụ (trên thực tế, giao tiếp đó là HTTP qua TLS), thư sẽ được bảo vệ toàn vẹn trong khi truyền.\\}
 	
 	\hspace{0.3cm}{Cùng với dữ liệu đang truyền, dữ liệu ở trạng thái nghỉ phải được bảo vệ toàn vẹn. Trong tất cả dữ liệu kinh doanh, các dấu vết kiểm tra quan trọng nhất để kiểm tra tính toàn vẹn. Kẻ xâm nhập có quyền truy cập vào hệ thống sẽ hạnh phúc nếu họ có thể sửa đổi các dấu vết kiểm tra để xóa sạch mọi bằng chứng. Trong quá trình triển khai vi dịch vụ dựa trên container, nhật ký kiểm tra không được lưu giữ ở mỗi nút chạy vi dịch vụ; chúng được xuất bản trong một số loại hệ thống theo dõi phân tán như Jaeger hoặc Zipkin. Chúng ta cần đảm bảo rằng dữ liệu được duy trì trong các hệ thống đó được bảo vệ toàn vẹn.}
 	
 	\subsubsection{Tính chống chối bỏ}
-	\hspace{1.0cm}{Chống chối bỏ là một khía cạnh quan trọng của bảo mật thông tin ngăn cản bạn từ chối bất cứ điều gì bạn đã thực hiện hoặc cam kết. Hãy xem xét một ví dụ thực tế. Khi bạn thuê một căn hộ, bạn đồng ý với các điều khoản và điều kiện với công ty cho thuê.}
+	\hspace{1.0cm}{Chống chối bỏ là một khía cạnh quan trọng của bảo mật thông tin ngăn cản bạn từ chối bất cứ điều gì bạn đã thực hiện hoặc cam kết. Hãy xem xét một ví dụ thực tế. Khi bạn thuê một căn hộ, bạn đồng ý với các điều khoản và điều kiện với công ty cho thuê.\\}
 	
-	\hspace{0.3cm}{Nếu bạn rời khỏi căn hộ trước khi kết thúc hợp đồng thuê, bạn có nghĩa vụ trả tiền thuê cho thời gian còn lại hoặc tìm người thuê khác để thuê lại căn hộ. Tất cả các điều khoản đều có trong hợp đồng cho thuê mà bạn chấp nhận bằng cách ký tên vào đó. Sau khi bạn ký tên, bạn không thể tranh chấp các điều khoản và điều kiện mà bạn đã đồng ý. Đó là điều không thể phủ nhận trong thế giới thực. Nó tạo ra một nghĩa vụ pháp lý. Ngay cả trong thế giới kỹ thuật số, một chữ ký giúp bạn đạt được sự không từ chối; trong trường hợp này, bạn sử dụng chữ ký điện tử.}
+	\hspace{0.3cm}{Nếu bạn rời khỏi căn hộ trước khi kết thúc hợp đồng thuê, bạn có nghĩa vụ trả tiền thuê cho thời gian còn lại hoặc tìm người thuê khác để thuê lại căn hộ. Tất cả các điều khoản đều có trong hợp đồng cho thuê mà bạn chấp nhận bằng cách ký tên vào đó. Sau khi bạn ký tên, bạn không thể tranh chấp các điều khoản và điều kiện mà bạn đã đồng ý. Đó là điều không thể phủ nhận trong thế giới thực. Nó tạo ra một nghĩa vụ pháp lý. Ngay cả trong thế giới kỹ thuật số, một chữ ký giúp bạn đạt được sự không từ chối; trong trường hợp này, bạn sử dụng chữ ký điện tử.\\}
 	
 	\hspace{0.3cm}{Bạn cũng cần đảm bảo rằng bạn ghi lại các giao dịch cùng với dấu thời gian và chữ ký—đồng thời duy trì các bản ghi đó trong một khoảng thời gian đáng kể. Trong trường hợp người khởi xướng tranh chấp giao dịch sau này, bạn sẽ có giao dịch đó trong hồ sơ của mình.}
 	
 	\subsubsection{Tính sẵn sàng}
-	\hspace{1.0cm}{Toàn bộ quan điểm của việc xây dựng bất kỳ loại hệ thống nào là cung cấp cho người dùng. Cứ mỗi phút (hoặc thậm chí là giây) hệ thống ngừng hoạt động, doanh nghiệp của bạn sẽ mất tiền. Amazon đã ngừng hoạt động trong 20 phút vào tháng 3 năm 2016 và tổn thất doanh thu ước tính là 3,75 triệu USD. Vào tháng 1 năm 2017, hơn 170 chuyến bay của Delta Airlines đã bị hủy do hệ thống ngừng hoạt động, dẫn đến thiệt hại ước tính 8,5 triệu USD.}
+	\hspace{1.0cm}{Toàn bộ quan điểm của việc xây dựng bất kỳ loại hệ thống nào là cung cấp cho người dùng. Cứ mỗi phút (hoặc thậm chí là giây) hệ thống ngừng hoạt động, doanh nghiệp của bạn sẽ mất tiền. Amazon đã ngừng hoạt động trong 20 phút vào tháng 3 năm 2016 và tổn thất doanh thu ước tính là 3,75 triệu USD. Vào tháng 1 năm 2017, hơn 170 chuyến bay của Delta Airlines đã bị hủy do hệ thống ngừng hoạt động, dẫn đến thiệt hại ước tính 8,5 triệu USD.\\}
 	
-	\hspace{0.3cm}{Không giống như trong các ứng dụng nguyên khối, trong triển khai vi dịch vụ, toàn bộ hệ thống sẽ không ngừng hoạt động nếu phát hiện thấy lỗi trong một thành phần hoặc vi dịch vụ. Chỉ microservice đó sẽ ngừng hoạt động; phần còn lại sẽ có thể hoạt động. Trong tất cả các yếu tố có thể làm hệ thống ngừng hoạt động, bảo mật có vai trò then chốt trong việc giúp hệ thống luôn sẵn sàng cho các bên liên quan hợp pháp của nó. Trong triển khai microservices, với nhiều điểm vào (có thể tiếp xúc với internet), kẻ tấn công có thể thực hiện tấn công từ chối dịch vụ (DoS) hoặc tấn công từ chối dịch vụ phân tán (DDoS) và đánh sập hệ thống.}
+	\hspace{0.3cm}{Không giống như trong các ứng dụng nguyên khối, trong triển khai vi dịch vụ, toàn bộ hệ thống sẽ không ngừng hoạt động nếu phát hiện thấy lỗi trong một thành phần hoặc vi dịch vụ. Chỉ microservice đó sẽ ngừng hoạt động; phần còn lại sẽ có thể hoạt động. Trong tất cả các yếu tố có thể làm hệ thống ngừng hoạt động, bảo mật có vai trò then chốt trong việc giúp hệ thống luôn sẵn sàng cho các bên liên quan hợp pháp của nó. Trong triển khai microservices, với nhiều điểm vào (có thể tiếp xúc với internet), kẻ tấn công có thể thực hiện tấn công từ chối dịch vụ (DoS) hoặc tấn công từ chối dịch vụ phân tán (DDoS) và đánh sập hệ thống.\\}
 	
 	\hspace{0.3cm}{Phòng thủ chống lại các cuộc tấn công như vậy có thể được xây dựng trên các cấp độ khác nhau. Ở cấp độ ứng dụng, điều tốt nhất bạn có thể làm là từ chối một tin nhắn (hoặc một yêu cầu) ngay khi bạn thấy rằng nó không hợp pháp. Có kiến trúc bảo mật theo lớp giúp bạn thiết kế từng lớp để xử lý các loại tấn công khác nhau và từ chối kẻ tấn công ở lớp ngoài cùng.}
 	
 	\pagebreak
 	
-	\textbf{Kết luận chương 1}
-	
-	\hspace{1.0cm}{Qua chương một, chúng ta đã tìm hiểu về kubernetes là gì, kiến trúc và cách thức hoạt động của kubernetes. Và tổng quan về microservice, các nguyên tắc để bảo vệ microservice. Nhưng khi mà chúng ta triển khai hệ thống microservice trên kubernetes, chúng ta làm thế nào để có thể bảo mật được các microservice. Nếu như một hệ thống lớn, có hàng trăm đến hàng ngàn microservice, thì liệu chúng ta có thể chỉ cần triển khai bảo mật trên hệ thống mà không cần phải sửa lại tất cả microservice đó không. Điều này là có thể đối với Service Mesh, một trong những công nghệ giúp chúng ta triển khai trên mặt hệ thống giúp bảo mật các ứng dụng microservice. Vậy, service mesh là gì, cách hoạt động của nó như nào, chúng ta sẽ đến với chương 2. Ở chương 2, chúng ta sẽ nói tổng quan về service mesh và công cụ giúp chúng ta triển khai service mesh trên kubernetes là HashiCorp Consul.}
+	\textbf{Kết luận chương 1\\}
+
+	\hspace{0.8cm}{Qua chương một, chúng ta đã tìm hiểu về kubernetes là gì, kiến trúc và cách thức hoạt động của kubernetes. Và tổng quan về microservice, các nguyên tắc để bảo vệ microservice. Nhưng khi mà chúng ta triển khai hệ thống microservice trên kubernetes, chúng ta làm thế nào để có thể bảo mật được các microservice. Nếu như một hệ thống lớn, có hàng trăm đến hàng ngàn microservice, thì liệu chúng ta có thể chỉ cần triển khai bảo mật trên hệ thống mà không cần phải sửa lại tất cả microservice đó không. Điều này là có thể đối với Service Mesh, một trong những công nghệ giúp chúng ta triển khai trên mặt hệ thống giúp bảo mật các ứng dụng microservice. Vậy, service mesh là gì, cách hoạt động của nó như nào, chúng ta sẽ đến với chương 2. Ở chương 2, chúng ta sẽ nói tổng quan về service mesh và công cụ giúp chúng ta triển khai service mesh trên kubernetes là HashiCorp Consul.}
 	
 	\chapter{Giới thiệu về HashiCorp Consul}
 	
 	\section{Tổng quát về Service Mesh}
 	
-	\hspace{1.0cm}{Để bắt đầu hành trình khám phá service mesh, có ba điều mà chúng ta cần phải biết: Service Mesh là gì, cách thức nó hoạt động như nào và tại sao chúng ta lại sử dụng nó.}
+	\hspace{1.0cm}{Để bắt đầu hành trình khám phá service mesh, có ba điều mà chúng ta cần phải biết: Service Mesh là gì, cách thức nó hoạt động như nào và tại sao chúng ta lại sử dụng nó.\\}
 	
-	\hspace{0.3cm}{Có lẽ, để định nghĩa ngắn gọn service mesh, thì chúng ta có thể hiểu như sau}
+	\hspace{0.3cm}{Có lẽ, để định nghĩa ngắn gọn service mesh, thì chúng ta có thể hiểu như sau:\\}
 	
-	\hspace{0.3cm}{Service mesh là lớp kiến trúc hạ tầng mà cho phép bạn kiểm soát giao tiếp mạng của hệ thống của bạn từ một control plan duy nhất.}
+	\hspace{0.8cm}{Service mesh là lớp kiến trúc hạ tầng mà cho phép bạn kiểm soát giao tiếp mạng của hệ thống của bạn từ một control plan duy nhất.\\}
 	
-	\hspace{0.3cm}{Để hiểu hơn về định nghĩa trên, chúng ta cần chia thành các phần sau: }
+	\hspace{0.3cm}{Để hiểu hơn về định nghĩa trên, chúng ta cần chia thành các phần sau: \\}
 	
-	\hspace{0.3cm}{Thông qua lớp kiến trúc hạ tầng, service mesh không phải là một phần của service, nó được triển khai và vận hành theo một cách độc lập. Vì nó không thể xác định được cụ thể được logic hoạt động của dịch vụ cụ thể, nhưng nó ảnh hưởng đến mọi dịch vụ, nên nó được coi là cơ sở hạ tầng hoặc phần mềm trung gian.}
+	\hspace{0.3cm}{Thông qua lớp kiến trúc hạ tầng, service mesh không phải là một phần của service, nó được triển khai và vận hành theo một cách độc lập. Vì nó không thể xác định được cụ thể được logic hoạt động của dịch vụ cụ thể, nhưng nó ảnh hưởng đến mọi dịch vụ, nên nó được coi là cơ sở hạ tầng hoặc phần mềm trung gian.\\}
 	
-	\hspace{0.3cm}{Dưới đây là hình ảnh của một phần mềm thông thường. Dịch vụ và ứng dụng chạy trên các cơ sở hạ tầng. Service mesh nằmg ở lớp cơ sở hạ tầng đầu tiên với các yêu cầu về lưu trữ, metrics và cơ sở hạ tầng cao cấp khác. Bến dưới đó là Kubernetes, máy ảo hoặc bất kì kiến trúc máy tính nào mà có thể chạy. Bên dưới cùng là phần cứng (bare metal)}
+	\hspace{0.3cm}{Dưới đây là hình ảnh của một phần mềm thông thường. Dịch vụ và ứng dụng chạy trên các cơ sở hạ tầng. Service mesh nằmg ở lớp cơ sở hạ tầng đầu tiên với các yêu cầu về lưu trữ, metrics và cơ sở hạ tầng cao cấp khác. Bến dưới đó là Kubernetes, máy ảo hoặc bất kì kiến trúc máy tính nào mà có thể chạy. Bên dưới cùng là phần cứng (bare metal)\\}
 	
 	\begin{figure}[h]
 		\centering
@@ -612,9 +612,9 @@
 	\subsection{Phương thức hoạt động của service mesh}
 	\hspace{1.0cm}{Service mesh được tạo thành từ các proxy sidecar và control plan.}
 	\subsubsection{Proxy Sidecar}
-	\hspace{1.0cm}{Proxy là một ứng dụng mà lưu lượng truy cập được định tuyến trên đường đến đích của nó. Các proxy phổ biến mà bạn có thể đã nghe nói đến là NGINX, HAProxy và Envoy. Trong hầu hết các service mesh, tất cả lưu lượng dịch vụ (vào và ra) được định tuyến thông qua một proxy cục bộ dành riêng cho từng phiên bản dịch vụ
+	\hspace{1.0cm}{Proxy là một ứng dụng mà lưu lượng truy cập được định tuyến trên đường đến đích của nó. Các proxy phổ biến mà bạn có thể đã nghe nói đến là NGINX, HAProxy và Envoy. Trong hầu hết các service mesh, tất cả lưu lượng dịch vụ (vào và ra) được định tuyến thông qua một proxy cục bộ dành riêng cho từng phiên bản dịch vụ\\}
 	
-	\hspace{0.3cm}{Hình bên dưới thể hiện service mesh sẽ như thế nào với 2 đối tượng: frontend và backend. Khí frontend gọi đến backend, proxy cục bộ của frontend sẽ bắt tất cả các yêu cầu được đi ra ngoài. Proxy của frontend sẽ chuyển các yêu cầu đến dịch vụ backend. Khi mà yêu cầu được đưa tới dịch vụ backend, tiếp tục, nó được proxy cục bộ của backend nắm bắt và kiểm tra. Nếu yêu cầu được cho phép, proxy của backend sẽ chuyển tiếp yêu cầu đó đên dịch vụ backend thực tế.}
+	\hspace{0.3cm}{Hình bên dưới thể hiện service mesh sẽ như thế nào với 2 đối tượng: frontend và backend. Khí frontend gọi đến backend, proxy cục bộ của frontend sẽ bắt tất cả các yêu cầu được đi ra ngoài. Proxy của frontend sẽ chuyển các yêu cầu đến dịch vụ backend. Khi mà yêu cầu được đưa tới dịch vụ backend, tiếp tục, nó được proxy cục bộ của backend nắm bắt và kiểm tra. Nếu yêu cầu được cho phép, proxy của backend sẽ chuyển tiếp yêu cầu đó đên dịch vụ backend thực tế.\\}
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width=0.7\linewidth]{Pics/proxy}
@@ -622,7 +622,7 @@
 		\label{fig:proxy}
 	\end{figure}
 	
-	\hspace{0.3cm}{Mỗi phiên bản của một dịch vụ phải được triển khai với proxy cục bộ của chính nó. Mẫu triển khai ứng dụng trợ giúp - trong trường hợp này là proxy - cùng với dịch vụ chính được gọi là mẫu sidecar và do đó, proxy cục bộ được gọi là proxy sidecar.}
+	\hspace{0.3cm}{Mỗi phiên bản của một dịch vụ phải được triển khai với proxy cục bộ của chính nó. Mẫu triển khai ứng dụng trợ giúp - trong trường hợp này là proxy - cùng với dịch vụ chính được gọi là mẫu sidecar và do đó, proxy cục bộ được gọi là proxy sidecar.\\}
 	
 	\hspace{0.3cm}{Proxy Sidecar là một thành phần quan trọng của service mesh vì chúng cho phép kiểm soát lưu lượng dịch vụ mà không cần sửa đổi hoặc triển khai lại các dịch vụ cơ bản. Vì proxy sidecar chạy dưới dạng các quy trình riêng biệt với dịch vụ nên chúng có thể được cấu hình lại mà không ảnh hưởng đến dịch vụ. Ví dụ: proxy sidecar của dịch vụ backend có thể được cấu hình lại để từ chối lưu lượng truy cập từ dịch vụ backend mà không cần thay đổi mã hoặc triển khai lại chính dịch vụ backend.}
 	
@@ -635,13 +635,200 @@
 		\label{fig:control-plane}
 	\end{figure}
 
-	\subsection{Các tính năng của Service Mesh}
+	\subsection{Các tính năng của service mesh}
 	\hspace{1.0cm}{Service mesh cung cấp các tính năng trong bốn lĩnh vực: bảo mật, khả năng quan sát, độ tin cậy và kiểm soát lưu lượng. Đề xuất giá trị cơ bản của service mesh là khả năng cung cấp các tính năng này trên mọi dịch vụ và khối lượng công việc mà không cần sửa đổi mã dịch vụ.}
 	\subsubsection{Bảo mật}
-	\hspace{1.0cm}{Một trong những lý do chính khiến các công ty triển khai service mesh là để bảo mật mạng của họ. Thông thường, điều này có nghĩa là mã hóa lưu lượng giữa tất cả các khối lượng công việc và triển khai xác thực cũng như ủy quyền.}
+	\hspace{1.0cm}{Một trong những lý do chính khiến các công ty triển khai service mesh là để bảo mật mạng của họ. Thông thường, điều này có nghĩa là mã hóa lưu lượng giữa tất cả các khối lượng công việc và triển khai xác thực cũng như ủy quyền.\\}
 	
-	\hspace{0.3cm}{Giải quyết vấn đề này có thể rất khó khăn trong kiến trúc microservices mà không có service mesh. Yêu cầu mã hóa mọi yêu cầu có nghĩa là cung cấp chứng chỉ Bảo mật tầng vận chuyển (TLS) cho mọi dịch vụ theo cách an toàn và quản lý cơ sở hạ tầng ký chứng chỉ của riêng bạn. Xác thực và ủy quyền mọi yêu cầu có nghĩa là cập nhật và duy trì mã xác thực trong mọi dịch vụ.}
+	\hspace{0.3cm}{Giải quyết vấn đề này có thể rất khó khăn trong kiến trúc microservices mà không có service mesh. Yêu cầu mã hóa mọi yêu cầu có nghĩa là cung cấp chứng chỉ Bảo mật tầng vận chuyển (TLS) cho mọi dịch vụ theo cách an toàn và quản lý cơ sở hạ tầng ký chứng chỉ của riêng bạn. Xác thực và ủy quyền mọi yêu cầu có nghĩa là cập nhật và duy trì mã xác thực trong mọi dịch vụ.\\}
 	
-	\hspace{0.3cm}{Service mesh giúp công việc này dễ dàng hơn nhiều vì nó có thể cấp chứng chỉ và định cấu hình proxy sidecar để mã hóa lưu lượng và thực hiện ủy quyền - tất cả mà không có bất kỳ thay đổi nào đối với các dịch vụ cơ bản}
+	\hspace{0.3cm}{Service mesh giúp công việc này dễ dàng hơn nhiều vì nó có thể cấp chứng chỉ và định cấu hình proxy sidecar để mã hóa lưu lượng và thực hiện ủy quyền - tất cả mà không có bất kỳ thay đổi nào đối với các dịch vụ cơ bản\\}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Pics/service-mesh_encrypted}
+		\caption{\label{fig:service-meshencrypted} Service mesh phát hành chứng chỉ và mã hóa đường truyền. }
+		\label{fig:service-meshencrypted}
+	\end{figure}
+
+	\subsubsection{Khả năng quan sát}
+	\hspace{1cm}{Khả năng quan sát là khả năng hiểu điều gì đang xảy ra với các dịch vụ của bạn khi chúng đang chạy. Dữ liệu về khả năng quan sát là cần thiết để hiểu kiến trúc vi dịch vụ và chẩn đoán lỗi, nhưng việc định cấu hình tất cả các dịch vụ của bạn để phát ra các chỉ số và dữ liệu khác theo cách thống nhất có thể là một thách thức.\\}
+	
+	\hspace{0.3cm}{Nắm bắt dữ liệu quan sát được là công việc hoàn hảo cho service mesh vì tất cả các yêu cầu đều chảy qua proxy của nó. Service mesh có thể định cấu hình proxy của nó để phát ra số liệu trên tất cả các dịch vụ của bạn ở định dạng nhất quán mà không cần sửa đổi hoặc triển khai lại các dịch vụ cơ bản.}
+	
+	\subsubsection{Độ tin cậy}
+	\hspace{1cm}{Trong các hệ thống phân tán, thường có lỗi xảy ra. Xây dựng các hệ thống phân tán đáng tin cậy có nghĩa là giảm thiểu sự cố nếu có thể và xử lý sự cố một cách khéo léo khi nó chắc chắn xảy ra.\\}
+	
+	\hspace{0.3cm}{Giảm thất bại có thể có nghĩa là thực hiện kiểm tra tình trạng để lưu lượng truy cập chỉ được gửi đến các dịch vụ khỏe mạnh. Xử lý lỗi có thể có nghĩa là thử lại các yêu cầu không thành công hoặc triển khai thời gian chờ, vì vậy một dịch vụ không chờ phản hồi mãi mãi.\\}
+	
+	\hspace{0.3cm}{Việc triển khai các kỹ thuật này trong mã tốn nhiều thời gian, dễ xảy ra lỗi và khó thực hiện một cách nhất quán trên tất cả các dịch vụ của bạn. Với service mesh, proxy có thể thực hiện các kỹ thuật này cho bất kỳ dịch vụ nào của bạn - tất cả những gì bạn cần làm là tương tác với control plane. Bạn cũng có thể điều chỉnh cài đặt theo thời gian thực khi tải dịch vụ thay đổi.\\}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Pics/reliability}
+		\caption{\label{fig:reliability} Service mesh có thể được cấu hình để thử lại các yêu cầu không thành công cho các trường hợp khác.}
+		\label{fig:reliability}
+	\end{figure}
+	
+	\subsubsection{Kiểm soát lưu lượng}
+	\hspace{1cm}{Kiểm soát lưu lượng là về việc kiểm soát nơi lưu lượng giữa các dịch vụ được định tuyến. Kiểm soát lưu lượng giải quyết nhiều vấn đề:}
+	
+	\begin{itemize}
+		\item Triển khai các chiến lược triển khai, chẳng hạn như triển khai canary, trong đó một lượng nhỏ  lưu lượng truy cập "canary" được chuyển đến phiên bản mới của dịch vụ để xem liệu dịch vụ đó có hoạt động hay không trước khi triển khai đầy đủ phiên bản mới.
+		\smallskip
+		\item Di chuyển từ nguyên khối sang vi dịch vụ, trong đó các dịch vụ được tách ra khỏi nguyên khối và lưu lượng truy cập trước đây được định tuyến đến nguyên khối được định tuyến lại một cách liền mạch đến các microservice mới.
+		\smallskip
+		\item Chuyển đổi dự phòng đa cụm, trong đó lưu lượng được định tuyến đến các dịch vụ trong cụm lành mạnh khác nếu cụm cục bộ ngừng hoạt động.
+	\end{itemize}
+
+	\subsubsection{Tính năng kết hợp}
+	\hspace{1cm}{Bây giờ các loại tính năng mà service mesh cung cấp là về bảo mật, khả năng quan sát, độ tin cậy và kiểm soát lưu lượng. Một mình, các tính năng này rất hữu ích, nhưng chúng thậm chí còn mạnh mẽ hơn khi kết hợp.\\}
+	
+	\hspace{0.3cm}{Ví dụ: dữ liệu về khả năng quan sát được cung cấp bởi service mesh có thể được kết hợp với các tính năng kiểm soát lưu lượng và độ tin cậy. Nếu lưới phát hiện ra rằng một phiên bản dịch vụ đang trả về lỗi, nó có thể chuyển hướng lưu lượng truy cập đến các phiên bản khỏe mạnh hoặc một cụm hoàn toàn khác. Hoặc các tính năng bảo mật dạng lưới có thể được kết hợp với các tính năng có thể quan sát để phát hiện khi một dịch vụ đang cố thực hiện các yêu cầu mà dịch vụ đó không được phép thực hiện - có khả năng chỉ ra một vi phạm bảo mật. Khi bạn tự triển khai Consul, bạn sẽ thấy nhiều trường hợp sử dụng mà bạn có thể kết hợp các tính năng service mesh.\\}
+	
+	\hspace{0.3cm}{Nếu tổ chức của bạn cần những tính năng này, thì bạn phải quyết định xem nó có xứng đáng với độ phức tạp bổ sung của service mesh hay không hay liệu bạn có nên triển khai chúng trong mã dịch vụ hay không. Chìa khóa để trả lời câu hỏi đó là kiểm tra quy mô của bạn.\\}
+	
+	\subsection{Khi nào nên sử dụng service mesh}
+	\hspace{1cm}{Không còn nghi ngờ gì nữa, việc triển khai service mesh sẽ làm tăng thêm độ phức tạp. Bây giờ bạn có proxy sidecar và control plane service mesh để quản lý. Ngoài ra, bạn sẽ cần nhiều tài nguyên điện toán hơn (CPU và bộ nhớ) để chạy proxy và control plane, và giờ đây, tất cả lưu lượng truy cập sẽ mất thêm một bước nhảy qua các proxy sidecar cục bộ, điều này làm tăng thêm độ trễ. Việc triển khai các tính năng service mesh trong mã sẽ tiết kiệm tài nguyên và giảm độ phức tạp của cơ sở hạ tầng (mặc dù nó sẽ làm tăng độ phức tạp của mã). Để một service mesh xứng đáng, nó phải cung cấp nhiều giá trị cho tổ chức của bạn.\\}
+	
+	\hspace{0.3cm}{Một công thức đơn giản để biết khi nào nên sử dụng service mesh là khi bạn (a) cần giải quyết các vấn đề về mạng trong các lĩnh vực đã nêu trước đó (bảo mật, khả năng quan sát, độ tin cậy và kiểm soát lưu lượng) và (b) tổ chức của bạn ở quy mô lớn, hoặc sẽ sớm đạt đến quy mô mà việc giải quyết những vấn đề đó trong mã dịch vụ là quá tốn kém.\\}
+	
+	\hspace{0.3cm}{Ví dụ: giả sử tổ chức của bạn đang chuyển sang kiến trúc bảo mật không tin cậy, trong đó tất cả lưu lượng truy cập nội bộ được mã hóa, xác thực và ủy quyền. Nếu chỉ chạy hai vi dịch vụ, bạn có thể dễ dàng mã hóa lại các dịch vụ đó. Tuy nhiên, nếu bạn đang chạy 400 vi dịch vụ, thì bạn sẽ không thể mã hóa lại tất cả các dịch vụ đó trong một khoảng thời gian hợp lý. Trong trường hợp này, một service mesh có rất nhiều ý nghĩa.\\}
+	
+	\hspace{0.3cm}{Ngoài ra, ở một quy mô nhất định, sẽ có các dịch vụ và khối lượng công việc mà bạn muốn kiểm soát mà bạn thực sự không có khả năng chỉnh sửa mã của chúng. Ví dụ: có thể bạn đang triển khai một phần mềm nguồn mở được đóng gói hoặc có thể bạn đang sử dụng cơ sở dữ liệu do đám mây quản lý. Lý tưởng nhất là bạn sẽ có cùng quyền kiểm soát đối với những khối lượng công việc mà bạn thực hiện đối với các dịch vụ khác của mình.\\}
+	
+	\hspace{0.3cm}{Cuối cùng, quy mô chính xác mà việc sử dụng service mesh hợp lý sẽ phụ thuộc vào tổ chức cụ thể của bạn và các vấn đề bạn đang cố gắng giải quyết. Tôi hy vọng rằng cuốn sách này sẽ giúp bạn hiểu các vấn đề mà service mesh giải quyết và giúp bạn đánh giá xem nó có hợp lý trong tình huống của bạn hay không.}
+	
+	\section{Giới thiệu về Consul}
+	\hspace{1cm}{“Hôm nay chúng tôi công bố Consul, một giải pháp để khám phá và cấu hình dịch vụ. Consul được phân phối hoàn toàn, có tính sẵn sàng cao và mở rộng quy mô thành hàng nghìn nút và dịch vụ trên nhiều trung tâm dữ liệu.”}
+	
+	\hspace{2cm}{- Armon Dadgar (đồng sáng lập HashiCorp), tháng 4 năm 2014\\}
+	
+	\hspace{0.3cm}{Khi Consul lần đầu tiên xuất hiện vào năm 2014. Điện toán đám mây và kiến trúc hướng dịch vụ (tiền thân của vi dịch vụ) đang trở thành xu hướng chủ đạo và mọi công ty bắt đầu vật lộn với vấn đề làm thế nào để định tuyến đến các dịch vụ và xử lý lỗi trong một hệ thống phân phối.\\}
+	
+	\hspace{0.3cm}{Consul là một công nghệ mang tính cách mạng vì nó kết hợp khám phá dịch vụ dựa trên DNS với một hệ thống phát hiện lỗi mạnh mẽ. Một dịch vụ sẽ đăng ký vào Consul và các dịch vụ khác có thể sử dụng mục nhập DNS của Consul để định tuyến đến nó. Ví dụ: dịch vụ giao diện người dùng sẽ có sẵn tại frontend.service.consul. Consul cũng phát hiện lỗi bằng cách sử dụng một thuật toán buôn chuyện có tên là Serf (được đề cập ở phần sau của chương này) và kiểm tra sức khỏe. Nếu một nút hoặc dịch vụ gặp sự cố, Consul sẽ nhanh chóng nhận thấy và xóa nó khỏi DNS.\\}
+	
+	\hspace{0.3cm}{Consul là mã nguồn mở, miễn phí sử dụng và giải quyết vấn đề mà hàng nghìn công ty gặp phải một cách tinh tế. Ngành công nghiệp nhanh chóng áp dụng nó.\\}
+	
+	\hspace{0.3cm}{Theo thời gian, kiến trúc hướng dịch vụ ngày càng lớn hơn và trở thành kiến trúc microservice với các dịch vụ ngày càng nhỏ hơn. Điều này dẫn đến sự gia tăng của Docker và bộ điều phối container như Kubernetes. Phong trào microservices và Kubernetes đã thay đổi ngành theo hai cách quan trọng:\\}
+	
+	\hspace{0.3cm}{Đầu tiên, khám phá dịch vụ DNS không còn đủ nữa. Các nhà phát triển cần nhiều tính năng làm việc trên mạng hơn về bảo mật, khả năng quan sát, độ tin cậy và kiểm soát lưu lượng để giúp chạy tất cả các dịch vụ này. Việc triển khai các tính năng này trong mã dịch vụ cũng trở nên khó khăn hơn vì số lượng dịch vụ không ngừng tăng lên.\\}
+	
+	\hspace{0.3cm}{Thứ hai, Kubernetes giúp việc chạy sidecar proxy trở nên dễ dàng hơn nhiều nhờ vào mô hình nhóm, trong đó nhiều vùng chứa có thể chạy cùng nhau trong một mạng riêng (Trước đây, có thể chạy hai quy trình cùng nhau; tuy nhiên, điều đó khó khăn hơn vì bạn cần phải sắp xếp việc triển khai và cấu hình của chúng theo cách thủ công. Ngoài ra, các quy trình khác trên cùng một máy có thể truy cập cùng một mạng và hệ thống tệp.)\\}
+	
+	\hspace{0.3cm}{Những thay đổi này đã kích hoạt công nghệ service mesh như chúng ta biết ngày nay.\\}
+	
+	\hspace{0.3cm}{Nhóm Consul tại HashiCorp đã đi theo những xu hướng này và vào năm 2018, họ đã phát hành một tính năng service mesh có tên là Consul Connect. Consul Connect tập trung vào liên lạc an toàn giữa các dịch vụ và hỗ trợ thêm cho các proxy sidecar để mã hóa lưu lượng giữa các dịch vụ. Kể từ đó, Consul đã phát triển thành một mạng service mesh đầy đủ chức năng với các tính năng không chỉ liên quan đến liên lạc an toàn mà còn cả khả năng quan sát, độ tin cậy và kiểm soát lưu lượng.\\}
+	
+	\hspace{0.3cm}{Bỏ qua lịch sử đó, bạn đã sẵn sàng tìm hiểu về cách thức hoạt động của Consul và điều gì làm cho nó trở nên độc đáo với tư cách là một mạng service mesh. Các phần sau đây đề cập đến kiến trúc của Consul và các giao thức mà nó sử dụng để duy trì độ tin cậy và khả năng mở rộng.\\}
+	
+	\subsection{Kiến trúc}
+	\hspace{1cm}{Một bản cài đặt Consul được tạo thành từ ba bộ thành phần: máy chủ Consul, ứng dụng client Consul và proxy sidecar. Các proxy Sidecar nói chuyện với các client Consul local của họ và các client Consul nói chuyện với các máy chủ Consul. Thường có ba hoặc năm Node máy chủ Consul  và có thể có tới hàng nghìn Node khối lượng công việc.\\}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Pics/architecture}
+		\caption{\label{fig:architecture} Bản cài đặt Consul bao gồm máy chủ Consul, máy client Consul và proxy sidecar.}
+		\label{fig:architecture}
+	\end{figure}
+	
+	\hspace{0.3cm}{Để liên kết kiến trúc của Consul với kiến trúc của service mesh chung thì các máy chủ và client của Consul là một phần của control plane.}
+	
+	\subsubsection{Máy chủ Consul}
+	\hspace{1cm}{Máy chủ Consul là cơ sở dữ liệu của Consul. Consul cần lưu trữ dữ liệu như danh mục (danh sách các nút và dịch vụ), cấu hình, trạng thái sức khỏe, v.v. Để triển khai sản xuất Consul, bạn phải chạy nhiều máy chủ Consul (mặc dù với mục đích thử nghiệm, một máy chủ là đủ). Việc chạy nhiều máy chủ đảm bảo tính sẵn sàng cao và tính ổn định của dữ liệu: nếu một máy chủ gặp sự cố, các máy chủ còn lại vẫn có thể phục vụ các yêu cầu và không có dữ liệu nào bị mất.\\}
+
+	\hspace{0.3cm}{Bạn phải luôn chạy số lượng máy chủ lẻ - ví dụ: ba hoặc năm - vì chạy số lượng máy chủ chẵn không làm tăng khả năng chịu lỗi của Consul (và do đó, thêm máy chủ gây lãng phí tài nguyên). Consul phải có đa số trong số các máy chủ đang chạy để tiếp tục hoạt động mà không gặp sự cố (Nếu phần lớn các máy chủ không chạy, Consul sẽ “lỗi tĩnh”. Điều này có nghĩa là mọi thứ sẽ tiếp tục hoạt động, nhưng không có thay đổi nào (chẳng hạn như đăng ký dịch vụ mới) có thể được thực hiện). Nếu bạn đang chạy ba máy chủ, phần lớn là hai máy chủ, vì vậy bạn có thể chấp nhận một máy chủ bị hỏng. Nếu bạn đang chạy bốn máy chủ, phần lớn là ba máy chủ, vì vậy bạn vẫn chỉ có thể chấp nhận một máy chủ bị hỏng.\\}
+	
+	\hspace{0.3cm}{Máy chủ Consul lưu trữ dữ liệu của họ trên đĩa. Trên Kubernetes, các máy chủ Consul được triển khai dưới dạng StatefulSet và sử dụng PersistentVolume để lưu trữ dữ liệu của chúng:}
+	
+	\begin{itemize}
+		\item \textbf{StatefulSet}
+		\subitem Một loại tài nguyên Kubernetes tương tự như Deployment (loại tài nguyên Kubernetes được sử dụng để triển khai nhiều bản sao của một dịch vụ và quản lý vòng đời của nó) đảm bảo cùng một khối lượng lưu trữ luôn được ghép nối với cùng một Pod.
+		\smallskip
+		\item \textbf{PersistentVolume}
+		\subitem Một đoạn dung lượng lưu trữ có thể được gắn vào một pod nhưng sẽ không bị xóa nếu pod đó khởi động lại.
+	\end{itemize}
+	
+	\hspace{0.3cm}{Trên máy ảo, máy chủ Consul nên được triển khai với ổ đĩa sẽ không bị mất khi Node khởi động lại.\\}
+	
+	\hspace{0.3cm}{Đối với sản xuất, bạn nên dành toàn bộ một Node cho từng máy chủ Consul để tránh các sự cố tranh chấp tài nguyên. Trên Kubernetes, điều này có thể được thực hiện bằng cách có một nhóm Node riêng biệt sử dụng các taint và dung sai để hạn chế Pod nào có thể được lên lịch cho các Node đó.}
+	
+	\subsubsection{Client Consul}
+	\hspace{1cm}{Client Consul chạy trên mọi Node khối lượng công việc trong cụm (Nếu bạn có các Node dành riêng cho máy chủ Consul, thì các Node khác trong cụm của bạn sẽ chạy các dịch vụ thực tế và các ứng dụng là các Node khối lượng công việc.) Client Consul chịu trách nhiệm phát hiện tình trạng của các dịch vụ đang chạy trên Node của chúng và tình trạng của các Node khác trong cụm. Các client Consul sau đó gửi thông tin này đến các máy chủ Consul để cập nhật danh mục của họ.\\}
+	
+	\hspace{0.3cm}{Về lý thuyết, máy chủ Consul có thể kiểm tra tình trạng của tất cả các dịch vụ và Node trong một cụm và sẽ không cần máy client Consul. Tuy nhiên, trên thực tế, cách tiếp cận tập trung này không thể mở rộng cho hàng chục nghìn Node và dịch vụ mà Consul muốn hỗ trợ. Thay vào đó,việc chạy ứng dụng client Consul trên mỗi Node cho phép Consul sử dụng phương pháp phân tán(Phát hiện lỗi phân tán bằng Serf) kiểm tra tình trạng của dịch vụ và Node dễ dàng mở rộng quy mô và dẫn đến phát hiện lỗi chỉ mất một phần nghìn giây, ngay cả trong các cụm lớn (Trên Kubernetes, việc phát hiện lỗi của Consul là không cần thiết vì Kubernetes thực hiện Node và phát hiện lỗi dịch vụ qua kubelet. Trong các phiên bản tương lai của Consul, ứng dụng client Consul có thể không còn cần thiết trên Kubernetes nữa.)\\}
+	
+	\hspace{0.3cm}Client Consul cũng chịu trách nhiệm định cấu hình proxy sidecar trên các Node của họ. Điều này được đề cập chi tiết hơn khi tôi xem qua một trường hợp sử dụng ví dụ.\\{}
+	
+	\hspace{0.3cm}{Máy chủ Consul cũng có thể hoạt động như client Consul. Điều này có nghĩa là bạn có thể chạy các dịch vụ trên cùng các Node như máy chủ Consul và các máy chủ sẽ quản lý các proxy sidecar mà không cần phải chạy ứng dụng client Consul. Kiến trúc này chỉ được đề xuất cho các cụm thử nghiệm nhỏ, nơi không hợp lý khi sử dụng các Node riêng cho máy chủ Consul và khối lượng công việc dịch vụ.\\}
+	
+	\hspace{0.3cm}{Trên Kubernetes, các client Consul được chạy dưới dạng DaemonSet. DaemonSet là loại tài nguyên Kubernetes tương tự như Deployment đảm bảo một nhóm máy client Consul sẽ chạy trên mọi Node trong cụm. Điều này đảm bảo luôn có sẵn ứng dụng client Consul để quản lý các proxy sidecar. Trên máy ảo, bạn có trách nhiệm đảm bảo rằng mọi Node khối lượng công việc đều được cung cấp máy client Consul.}
+	
+	\subsubsection{Proxy Sidecar}
+	\hspace{1cm}{Mỗi phiên bản dịch vụ, một phiên bản đang chạy cụ thể của một dịch vụ, có một proxy sidecar chuyên dụng. Trách nhiệm của proxy là chặn các yêu cầu đến và từ phiên bản dịch vụ của nó, đồng thời thực hiện các hành động theo yêu cầu như đã định cấu hình - ví dụ: mã hóa yêu cầu bằng TLS hoặc từ chối yêu cầu từ một số dịch vụ nhất định.\\}
+	
+	\hspace{0.3cm}{Consul tự nó không phải là một proxy (Về mặt kỹ thuật, đó là do nó đi kèm với cái được gọi là proxy tích hợp, nhưng proxy này có tối thiểu chức năng và chỉ nên được sử dụng cho các trường hợp thử nghiệm nhỏ) Thay vào đó, Consul sử dụng một proxy gọi là Envoy. Envoy là một proxy nguồn mở được tạo tại Lyft. Nó hiện là một dự án CNCF (Cloud Native Computing Foundation) được nhiều service mesh sử dụng. Envoy được viết bằng C++ cho hiệu năng và có dung lượng bộ nhớ rất thấp. Điều này có nghĩa là nó có thể chạy bên cạnh tất cả các dịch vụ của bạn với tác động tối thiểu đến tài nguyên và độ trễ. Envoy hỗ trợ hàng trăm tính năng để cân bằng tải, khả năng quan sát, kiểm tra sức khỏe, v.v. Máy khách Consul định cấu hình Envoy qua API gRPC của nó.\\}
+	
+	\hspace{0.3cm}{Trên Kubernetes, sidecar proxy chạy dưới dạng các container riêng biệt trong các nhóm dịch vụ. Điều này đảm bảo rằng các bộ chứa dịch vụ có thể định tuyến đến các proxy sidecar của chúng trong mạng nhóm cục bộ. Trên máy ảo, proxy sidecar chạy dưới dạng các quy trình riêng biệt cho từng phiên bản dịch vụ trên máy ảo đó.\\}
+	
+	\hspace{0.3cm}{Bây giờ bạn đã quen thuộc với máy chủ Consul, client và proxy sidecar, hãy xem qua một trường hợp sử dụng ví dụ để hiểu cách cả ba thành phần hoạt động cùng nhau.}
+	
+	\subsubsection{Trường hợp sử dụng ví dụ}
+	\hspace{1cm}{Hãy tưởng tượng một dịch vụ mới gọi là backend được bắt đầu trên một Node (xem bước 1 trong Hình 2.7). Tiếp theo, dịch vụ backend được đăng ký với địa chỉ IP của nó - ví dụ: 1.2.3.4 - vào ứng dụng client Consul trên Node đó (bước 2). Sau đó, ứng dụng client Consul đưa ra yêu cầu quay lại máy chủ Consul để thông báo cho họ biết rằng một dịch vụ mới có tên là backend đang chạy trên Node đó có địa chỉ 1.2.3.4 (bước 3). Các máy chủ Consul sau đó thêm dịch vụ đó vào danh mục (bước 4).\\}
+	
+	\begin{figure}[p]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Pics/example}
+		\caption{\label{fig:example} Một dịch vụ mới đang được bắt đầu trên một Node.}
+		\label{fig:example}
+	\end{figure}
+	
+	\hspace{0.3cm}{Đồng thời, proxy cho dịch vụ backend khởi động. Proxy mở một kết nối tới client Consul cục bộ (xem bước 1 hình 2.8). Ứng dụng client Consul định cấu hình proxy và giữ kết nối mở để định cấu hình lại trong tương lai (bước 2).\\}
+	
+	\begin{figure}[p]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Pics/example2}
+		\caption{\label{fig:example2} Client Consul cấu hình proxy backend.}
+		\label{fig:example2}
+	\end{figure}
+	
+	\hspace{0.3cm}{Bây giờ hãy tưởng tượng rằng có một dịch vụ khác gọi là giao diện người dùng đang chạy trên một Node khác trong cụm và dịch vụ giao diện người dùng được cấu hình để giao tiếp với dịch vụ backend (hiển thị trong Hình 2.9).\\}
+	
+	\begin{figure}[p]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Pics/example3}
+		\caption{\label{fig:example3} Dịch vụ giao diện người dùng được cấu hình để nói chuyện với dịch vụ backend, nhưng nó chưa biết dùng địa chỉ nào.}
+		\label{fig:example3}
+	\end{figure}
+	
+	\hspace{0.3cm}{Proxy của giao diện người dùng cần biết địa chỉ của dịch vụ backend để thực hiện yêu cầu. Để thực hiện điều này, ứng dụng client Consul trên cùng một nút với dịch vụ giao diện người dùng sẽ xem danh mục máy chủ Consul để biết các phiên bản mới của dịch vụ backend (bước 1 trong Hình 2.10). Khi một phiên bản mới của dịch vụ backend được đăng ký vào danh mục, máy chủ Consul sẽ gửi địa chỉ mới đến ứng dụng client Consul (bước 2). Sau đó, máy client Consul cập nhật cấu hình proxy của dịch vụ giao diện người dùng với địa chỉ mới cho dịch vụ backend (bước 3).\\}
+	
+	\begin{figure}[p]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Pics/example4}
+		\caption{\label{fig:example4} Proxy của giao diện người dùng học địa chỉ của dịch vụ backend để thực hiện yêu cầu.}
+		\label{fig:example4}
+	\end{figure}
+	
+	\hspace{0.3cm}{Bây giờ proxy của dịch vụ giao diện người dùng biết địa chỉ của dịch vụ backend. Khi dịch vụ giao diện người dùng đưa ra yêu cầu của nó, proxy của giao diện người dùng sẽ chặn nó (bước 1 trong Hình 2.11). Proxy thấy rằng yêu cầu bị ràng buộc đối với dịch vụ backend và vì nó biết địa chỉ của dịch vụ backend, 1.2.3.4, nên nó sẽ chuyển tiếp yêu cầu đến địa chỉ đó (bước 2). Yêu cầu đến dịch vụ backend, nơi proxy của dịch vụ backend chặn nó (bước 3). Giả sử rằng proxy của backend được định cấu hình để chỉ cho phép các yêu cầu từ dịch vụ giao diện người dùng. Proxy kiểm tra yêu cầu và thấy rằng đó là từ dịch vụ giao diện người dùng, và do đó, nó cho phép yêu cầu thông qua (bước 4).\\}
+	
+	\begin{figure}[p]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Pics/example5}
+		\caption{\label{fig:example5} Các proxy Sidecar ghi lại lưu lượng trong và ngoài và tuân theo các quy tắc được cấu hình của chúng để hành động trên lưu lượng đó.}
+		\label{fig:example5}
+	\end{figure}
+	
+	\hspace{0.3cm}{Ví dụ này minh họa cách máy chủ Consul, client và proxy sidecar hoạt động cùng nhau. Máy chủ Consul và client giao tiếp để chia sẻ dữ liệu về cụm và định cấu hình proxy sidecar. Các proxy Sidecar nắm bắt lưu lượng truy cập vào và ra và tuân theo các quy tắc được định cấu hình của chúng để hành động trên lưu lượng đó, chẳng hạn như bằng cách định tuyến nó tới một proxy khác hoặc không cho phép lưu lượng vì nó không được phép.}
+	
+	\subsection{Consul so với servece mesh khác}
+	\hspace{1cm}{Có nhiều service mesh khác trên thị trường, chẳng hạn như Istio và Linkerd. Hầu hết các mắt service mesh đều tuân theo cùng một kiến trúc chung với một control plane quản lý các proxy sidecar. Consul là duy nhất trong số các mắt lưới khác ở chỗ control plane của nó có thể chạy hoàn toàn tách biệt với Kubernetes. Điều này có nghĩa là nếu bạn đang quản lý một cụm máy ảo thì bạn cũng không cần chạy Kubernetes.\\}
+	
+	\hspace{0.3cm}{Mỗi service mesh đều có ưu và nhược điểm tùy thuộc vào trường hợp sử dụng chính xác của bạn. Một cách tiếp cận tốt để chọn service mesh là tập trung vào ba trường hợp sử dụng hàng đầu của bạn, chẳng hạn như bảo mật, khả năng quan sát và hỗ trợ đa cụm, sau đó kiểm tra các service mesh phổ biến nhất và chọn một lưới mà bạn cảm thấy phù hợp nhất.}
+	
+	\subsection{Các tính năng khác của Consul}
+	\hspace{1cm}{Consul không chỉ là một mạng service mesh. Đây cũng là kho lưu trữ khóa/giá trị cho cấu hình dịch vụ và giải pháp khám phá dịch vụ DNS. Khi sử dụng DNS, không có proxy sidecar. Các yêu cầu được định tuyến trực tiếp giữa các dịch vụ. Điều này có nghĩa là không có tính năng mã hóa, quan sát hoặc kiểm soát lưu lượng tự động.\\}
+	
+	\hspace{0.3cm}{Cuốn sách này tập trung vào các tính năng service mesh của Consul, nhưng bạn có thể truy cập tài liệu của Consul để tìm hiểu thêm về các tính năng khác của nó.}
 	
 \end{document}
