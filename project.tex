@@ -830,5 +830,418 @@
 	\hspace{1cm}{Consul không chỉ là một mạng service mesh. Đây cũng là kho lưu trữ khóa/giá trị cho cấu hình dịch vụ và giải pháp khám phá dịch vụ DNS. Khi sử dụng DNS, không có proxy sidecar. Các yêu cầu được định tuyến trực tiếp giữa các dịch vụ. Điều này có nghĩa là không có tính năng mã hóa, quan sát hoặc kiểm soát lưu lượng tự động.\\}
 	
 	\hspace{0.3cm}{Cuốn sách này tập trung vào các tính năng service mesh của Consul, nhưng bạn có thể truy cập tài liệu của Consul để tìm hiểu thêm về các tính năng khác của nó.}
+	\section{Bảo mật trong Consul}
+	\subsection{Zero trust network trong Consul}
+	\subsection{Mã hóa trong Consul}
+	\subsection{Xác thực trong Consul}
+	\subsection{Ủy quyền trong Consul}
+	\chapter{Triển khai Consul trên Kubernetes}
+	\section{Mô hình triển khai}
+	\section{Các bước triển khai Consul trên Kubernetes}
+	\section{Thực nghiệm}
+	\subsection{Kịch bản một: Mã hoá và thiết lập luật đường truyền giữa các micorserivce trong kubernetes}
+	\subsubsection{Mô hình kịch bản}
+	 \begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Pics/kb1}
+		\caption{\label{fig:kb1} Kịch bản một.}
+		\label{fig:kb1}
+	\end{figure}
+	
+	\hspace{1.0cm}{Ở trong kịch bản này, mục tiêu của chúng ta là sẽ tiến hành mã hoá và thiết lập các luật cho microservice. Các cách mã hoá sẽ được giải thích ở phần bên dưới.}
+	\subsubsection{Thực nghiệm}
+	\hspace{1.0cm}{Đầu tiên, chúng ta có tạo một tệp tin cấu hình của ứng dụng và service dành cho frontend, nội dung của tệp tin đó như sau:}
+	\begin{lstlisting}[language=Bash]
+		apiVersion: apps/v1
+		kind: Deployment
+		metadata:
+			name: frontend
+			labels:
+				app: frontend
+		spec:
+			replicas: 1
+			selector:
+			matchLabels:
+				app: frontend
+			template:
+				metadata:
+					labels:
+						app: frontend
+				annotations:
+					consul.hashicorp.com/connect-inject: 'true'
+			spec:
+				containers:
+				  - name: frontend
+				  image: ghcr.io/consul-up/birdwatcher-frontend:1.0.0
+				  env:
+					- name: BIND_ADDR
+					  value: "0.0.0.0:6060"
+					- name: BACKEND_URL
+					  value: "http://backend"
+				  ports:
+				    - containerPort: 6060
+	\end{lstlisting}
+
+	\begin{lstlisting}[language=Bash]
+		apiVersion: v1
+		kind: Service
+		metadata:
+			name: frontend
+				labels:
+					app: frontend
+		spec:
+			type: LoadBalancer
+			selector:
+				app: frontend
+			ports:
+				- protocol: TCP
+				  port: 6060
+				  targetPort: 6060
+	\end{lstlisting}
+	\hspace{1.0cm}{Ở bên trên, lần lượt là nội dung của cấu hình dành cho ứng dụng frontend. Ứng dụng sẽ được triển khai theo kiểu deployment, tên của deployment là frontend và được gán label với key là app và value là frontend. Tiếp theo, số lượng pod được sao chép nhau được định nghĩa là 1, và bên số lượng bản sao sẽ có cùng một cấu hình được mô phỏng theo trường template ở bên dưới. Ứng dụng sẽ được thêm một trường annotation, trường này sẽ có tác dụng ghi đè cấu hình của Consul lên trên ứng dụng. Ở đây, chúng ta sẽ truyền vào annotaions là pod sẽ được inject sidecar đi kèm với ứng dụng. Cuối cùng, phần ứng dụng sẽ là một image có tên là \textit{ghcr.io/consul-up/birdwatcher-frontend:1.0.0}, các bản sao sẽ dựa trên image này và bắt đầu khởi chạy ứng dụng. Các biến môi trường được truyền vào theo kiểu khoá và giá trị, các giá trị này sẽ giúp cho ứng dụng chạy trên ip là 0.0.0.0 với cổng là 6060 và đường dẫn tới ứng dụng backend là \textit{http://backend}. Cổng của ứng dụng sẽ được mở là cổng 6060.}
+	
+	\hspace{0.3cm}{Với tệp cấu hình service, chúng ta sẽ tạo cho ứng dụng một service có tên là frontend, loại của service này là \textit{LoadBalancer}, giao thức của ứng dụng này được sử dụng là TCP, cổng của service là 6060 và cổng của container được service trỏ vào là 6060.}
+	
+	\hspace{0.3cm}{Tiếp theo đấy, là tệp tin cấu hình của ứng dụng và service dành cho  backend, tệp tin có nội dung như sau:}
+		\begin{lstlisting}[language=Bash]
+		apiVersion: apps/v1
+		kind: Deployment
+		metadata:
+			name: backend
+				labels:
+					app: backend
+		spec:
+			replicas: 1
+			selector:
+				matchLabels:
+					app: backend
+			template:
+				metadata:
+					labels:
+						app: backend
+				annotations:
+					consul.hashicorp.com/connect-inject: 'true'
+				spec:
+					containers:
+					  - name: backend
+				 	  image: ghcr.io/consul-up/birdwatcher-frontend:1.0.0
+					  env:
+						- name: BIND_ADDR
+						  value: "0.0.0.0:7000"
+					  ports:
+					  	- containerPort: 7000
+	\end{lstlisting}
+
+	\begin{lstlisting}[language=Bash]
+		apiVersion: v1
+		kind: Service
+		metadata:
+			name: backend
+				labels:
+					app: backend
+		spec:
+			type: LoadBalancer
+				selector:
+					app: backend
+			ports:
+				- protocol: TCP
+				  port: 80
+				  targetPort: 7000
+	\end{lstlisting}
+	\hspace{1.0cm}{Tương tự như frontend, ứng dụng backend sẽ được cấu hình theo kiểu Deployment. Tên của deployment là backend và được gán label với key là app và value là backend. Tiếp theo, số lượng pod được sao chép nhau được định nghĩa là 1, và bên số lượng bản sao sẽ có cùng một cấu hình được mô phỏng theo trường template ở bên dưới. Ứng dụng sẽ được thêm một trường annotation, trường này sẽ có tác dụng ghi đè cấu hình của Consul lên trên ứng dụng. Ở đây, chúng ta sẽ truyền vào annotaions là pod sẽ được inject sidecar đi kèm với ứng dụng. Cuối cùng, phần ứng dụng sẽ là một image có tên là \textit{ghcr.io/consul-up/birdwatcher-backend:1.0.0}, các bản sao sẽ dựa trên image này và bắt đầu khởi chạy ứng dụng. Các biến môi trường được truyền vào theo kiểu khoá và giá trị, các giá trị này sẽ giúp cho ứng dụng chạy trên ip là 0.0.0.0 với cổng là 7000. Cổng của ứng dụng sẽ được mở là cổng 7000.}
+
+	\hspace{0.3cm}{Với tệp cấu hình service, chúng ta sẽ tạo cho ứng dụng một service có tên là backend, loại của service này không được định nghĩa, nên kubernetes sẽ tự ngầm hiểu là kiểu \textit{ClusterIP}, giao thức của ứng dụng này được sử dụng là TCP, cổng của service là 80 và cổng của container được service trỏ vào là 7000.}
+	
+	\hspace{0.3cm}{Sau khi chúng ta có sao chép nội dung vào các tệp tin, chúng ta sẽ di chuyển chúng vào trong một thư mục. Ở đây, chúng ta sẽ di chuyển vào thư mục \textit{/c/Users/justo/Desktop/Helm-chart/nestjs-helm/consul/manifest/application}. Để chạy các ứng dụng, chúng ta sẽ bắt sử dụng câu lệnh sau:}
+	\begin{lstlisting}[language=Bash]
+	kubectl apply -f /c/Users/justo/Desktop/Helm-chart/nestjs-helm/consul/manifest/application/. 
+	\end{lstlisting}
+
+	\hspace{1.0cm}{Sau khi apply, ứng dụng sẽ được triển khai trên sẽ mất một thời gian để ở trạng thái ready. Để kiểm tra trạng thái ứng dụng, chúng ta sẽ chạy lệnh sau:}
+	\begin{lstlisting}[language=Bash]
+	$ kubectl get deployment,service --selector app=frontend
+	NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+	deployment.apps/frontend   1/1     1            1           2d20h
+	
+	NAME               TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+	service/frontend   LoadBalancer   10.110.206.79   localhost     6060:32589/TCP   2d20h
+	\end{lstlisting}
+	\begin{lstlisting}[language=Bash]
+	$ k get deployment,service --selector app=backend
+	NAME                      READY   UP-TO-DATE   AVAILABLE   AGE
+	deployment.apps/backend   1/1     1            1           2d20h
+	
+	NAME              TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
+	service/backend   ClusterIP   10.103.28.18   <none>        80/TCP    2d20h
+	\end{lstlisting}
+
+	\hspace{0.3cm}{Ở đây, con số của trạng thái sẵn sàng là 1/1, thì ứng dụng của chúng ta đã được triển khai thành công. Service của các ứng dụng đã được mở cổng như chúng ta mong đợi. Và tiếp theo, chúng ta sẽ bắt đầu truy cập vào UI của ứng dụng frontend và xem kết quả.}
+	
+	\hspace{0.3cm}{Để truy cập được vào UI của ứng dụng, chúng ta sẽ sử dụng câu lệnh port-forward để mở port của ứng dụng ra bên ngoài máy của chúng ta. Câu lệnh được thực thi như sau:}
+	\begin{lstlisting}[language=Bash]
+	kubectl port-forward service/frontend 6060
+	\end{lstlisting}
+	\hspace{1.0cm}{Sau khi port-forward thành công, chúng ta mở trình duyệt web lên và tiến hành truy cập vào địa chỉ \textit{http://localhost:6060} để kiểm tra kết quả.}
+	\pagebreak
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=1\linewidth]{Pics/localhost-6060}
+		\caption{\label{fig:localhost-6060} Giao diện ứng dụng frontend.}
+		\label{fig:localhost-6060}
+	\end{figure}
+
+	\hspace{0.3cm}{Tiếp theo, chúng ta đã thêm annotations vào trong tệp cấu hình, chúng ta sẽ port-forward tiếp consul server tương tự như trên và chúng ta tiến hành vào giao diện của consul với địa chỉ \textit{http://localhost:8500} để xem kết quả mà chúng ta đã truyền sidecar đi kèm với ứng dụng.}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=1\linewidth]{Pics/localhost-8500}
+		\caption{\label{fig:localhost-8500} Giao diện Consul Server.}
+		\label{fig:localhost-8500}
+	\end{figure}
+	\hspace{0.3cm}{Như vậy, chúng ta đã thành công truyền proxy đi kèm với ứng dụng frontend và backend, hay nói cách khác, ứng dụng frontend và backend đang là một phần của service mesh. Sau đấy, chúng ta sẽ quay lại trang web \textit{http://localhost:6060} lúc nãy, tải lại trang và kiểm tra kết quả. Nếu như trang trả lại lỗi như bên dưới, thì mọi thứ vẫn đang đúng như những gì chúng ta đã làm.}
+	\pagebreak
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=1\linewidth]{Pics/localhost-6060-error}
+		\caption{\label{fig:localhost-6060-error} Lỗi khi vào tải lại trang.}
+		\label{fig:localhost-6060-error}
+	\end{figure}
+
+	\hspace{0.3cm}{Lý do mà trang không thể tải lại được, nguyên nhân là do ứng dụng frontend đang là một phần của service mesh. Sidecar proxy đã chặn tất cả các nguồn đi vào được trong ứng dụng. Consul đã bảo mật ứng dụng và yêu cầu tất cả các luồng đi vào service mesh cần phải được xác thực và uỷ quyền.  Khi mà chúng ta request tới frontend, thì chúng ta chưa xác thực và nhận được quyền truy cập vào trong frontend nên Consul đã từ chối và không cho phép chúng ta truy cập. Nếu như chúng ta truy cập được bằng port-forward, thì portforward đã cho phép chúng ta bỏ qua luật của consul và truy cập thẳng vào trong ứng dụng frontend.}
+	
+	\hspace{0.3cm}{Ở trên giao diện của Consul, chúng ta click vào các service, ở đây, giao diện sẽ hiện ra các cấu trúc giữa các service mesh với nhau.}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=1\linewidth]{Pics/topology}
+		\caption{\label{fig:topology} Cấu trúc của service frontend.}
+		\label{fig:topology}
+	\end{figure}
+	
+	\hspace{0.3cm}{Tiếp theo, chúng ta sẽ tiến hành thiết lập luật dành cho service frontend và backend. Để thiết lập, chúng ta có 2 cách để làm, cách thứ nhất là chúng ta có thể làm trực tiếp trên giao diện, nhưng mà chúng ta không nên sử dụng cách này, vì sau khi chúng ta di dời Consul sang một bên khác, thì chúng ta sẽ lại phải thiết lập bằng tay tất cả các service. Việc này khá là tốn effort dành cho người quản trị. Với cách thứ hai, chúng ta có thể viết cấu hình vào một tiệp loại yaml dành cho kubernetes. Tệp cấu hình có nội dung như sau:}
+	\begin{lstlisting}[language=Bash]
+		apiVersion: consul.hashicorp.com/v1alpha1
+		kind: ServiceIntentions
+		metadata:
+			name: frontend
+			namespace: consul
+		spec:
+			destination:
+			  name: frontend
+			sources:
+			- name: backend
+			  action: allow
+	\end{lstlisting}
+	\hspace{1.0cm}{Sau khi tạo một tệp với nội dung bên trên, chúng ta tiến hành apply nó và lên trên giao diện của Consul Server và xem kết quả.}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Pics/intention-1}
+		\caption{\label{fig:intention-1} Intention sau khi được cấu hình.}
+		\label{fig:intention-1}
+	\end{figure}
+
+	\hspace{0.3cm}{Với luật này, chúng ta cho phép service backend được kết nối tới service frontend. Tuy nhiên, đến đây vẫn chưa xong, vì mặc định của proxy là giao tiếp thông qua giao thức tcp, mà ứng dụng frontend và backend giao tiếp thông qua giao thức http. Vì vậy, chúng ta cần cài đặt lại để cho proxy nhận truy cập http. Để cấu hình, chúng ta cần tạo 1 tệp tin với nội dung như sau:}
+	\begin{lstlisting}[language=Bash]
+	apiVersion: consul.hashicorp.com/v1alpha1
+	kind: ProxyDefaults
+	metadata:
+		name: global
+		namespace: consul
+	spec:
+		config:
+		protocol: http
+	\end{lstlisting}
+	\hspace{1.0cm}{Sau khi cấu hình xong, chạy lệnh sau để kiểm tra:}
+	\begin{lstlisting}[language=Bash]
+	$ kubectl get proxydefaults.consul.hashicorp.com  -A
+	NAMESPACE   NAME     SYNCED   LAST SYNCED   AGE
+	consul      global   True     90m           90m
+	\end{lstlisting}
+	\hspace{1.0cm}{Như vậy, với status là synced, thì có nghĩa là ứng dụng đã có thể giao tiếp với nhau thông qua giao thức http.}
+	
+	\hspace{0.3cm}{Tiếp theo đấy, chúng ta sẽ kiểm tra xem thông tin chứng chỉ mà Consul tạo ra cho ứng dụng. Để kiểm tra, đầu tiên chúng ta cần truy cập được vào trong container ứng dụng với câu lệnh sau:}
+	\begin{lstlisting}[language=Bash]
+		kubectl exec deploy/backend -c backend -- \
+		sh -c 'openssl s_client -connect $(hostname -i):20000 | \
+		openssl x509 -noout -text'
+		--------------------------------------------
+		openssl x509 -noout -text'
+		Can't use SSL_get_servername
+		depth=0
+		verify error:num=20:unable to get local issuer certificate
+		verify return:1
+		depth=0
+		verify error:num=21:unable to verify the first certificate
+		verify return:1
+		depth=0
+		verify return:1
+		DONE
+		Certificate:
+		Data:
+		Version: 3 (0x2)
+		Serial Number: 39 (0x27)
+		Signature Algorithm: ecdsa-with-SHA256
+		Issuer: CN = pri-1r5tjaui.consul.ca.562ec48b.consul
+		Validity
+		Not Before: Dec 20 13:12:29 2022 GMT
+		Not After : Dec 23 13:12:29 2022 GMT
+		Subject:
+		Subject Public Key Info:
+		Public Key Algorithm: id-ecPublicKey
+		Public-Key: (256 bit)
+		pub:
+		04:1c:cd:db:7b:49:00:e2:9a:48:97:71:31:88:32:
+		45:85:c8:15:01:82:b9:27:34:eb:0b:a0:63:02:7d:
+		fe:1e:af:a2:42:e8:26:1f:19:43:2a:51:d5:bf:46:
+		42:0f:f5:65:36:29:2d:05:ff:80:d4:23:93:49:00:
+		18:1f:44:1f:dd
+		ASN1 OID: prime256v1
+		NIST CURVE: P-256
+		X509v3 extensions:
+		X509v3 Key Usage: critical
+		Digital Signature, Key Encipherment, Data Encipherment, Key Agreement
+		X509v3 Extended Key Usage:
+		TLS Web Client Authentication, TLS Web Server Authentication
+		X509v3 Basic Constraints: critical
+		CA:FALSE
+		X509v3 Subject Key Identifier:
+		BB:38:30:7C:86:88:A3:DC:AB:43:69:77:6B:B9:43:95:81:D1:25:47:E4:FA:9C:D6:AB:C2:A1:FE:99:51:FA:F7
+		X509v3 Authority Key Identifier:
+		keyid:0B:A1:BC:23:3F:15:0E:84:6B:32:30:E2:03:42:68:1B:2B:99:FF:7F:78:F1:71:0B:9D:70:5A:C0:F0:DE:66:A0
+		
+		X509v3 Subject Alternative Name: critical
+		URI:spiffe://562ec48b-2872-87db-c307-d5435d3d833e.consul/ns/default/dc/dc1/svc/backend
+		Signature Algorithm: ecdsa-with-SHA256
+		30:45:02:21:00:ed:64:a1:78:0e:09:8b:fc:6c:ea:10:76:5b:
+		57:c5:a3:c5:8c:0d:b2:ab:65:12:a1:67:45:0f:31:7d:dc:fd:
+		74:02:20:15:ab:1c:60:c6:64:91:2e:0f:0b:bb:47:33:a2:24:
+		13:54:3d:0a:fe:3b:8f:c6:e7:53:ea:e2:47:c6:65:75:79
+	\end{lstlisting}
+	\hspace{1.0cm}{Đây là chứng chỉ mà Consul tạo ra để mã hoá các dữ liệu được truyền qua nhau thông qua proxy. Các chứng chỉ này được tạo ra bởi Consul, ở đây Consul đóng vai trò là một cơ quan cấp chứng chỉ và cấp cho mỗi Service. Dưới đây là cách mà Consul tạo ra chứng chỉ để mã hoá và dùng chứng chỉ để giải mã dữ liệu.}
+	\pagebreak
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Pics/certificate}
+		\caption{\label{fig:certificate} Biểu đồ tuần tự trong giao tiếp của ứng dụng frontend và backend.}
+		\label{fig:certificate}
+	\end{figure}
+
+	\hspace{0.3cm}{Với mỗi chứng chỉ, Consul sẽ mã hoá ID của mỗi service được gọi là SPIFFE ID, mỗi ID được gắn vào chứng chỉ và chỉ có Consul có thể giải mã được được ID đấy. Cho nên, nếu như hacker có thể xâm nhập được vào ứng dụng, nhưng khi gọi các service, hacker sẽ không có được ID để mã hoá và gửi cho các service kia.}
+	\subsubsection{Đánh giá}
+	\hspace{1.0cm}{Qua kịch bản trên, chúng ta đã có thể mã hoá giao tiếp giữa các service với nhau thông qua TLS cũng như thiết lập các luật giao tiếp của chúng với nhau. Tuy nhiên, khi mà chúng ta thiết lập xong như vậy, thì làm thế nào để chúng ta không cần xác thực và được uỷ quyền đến từ consul mà vẫn có thể truy cập được ứng dụng, chúng ta sẽ đến kịch bản 2, triển khai Ingress Gateway cho các service.}
+	\subsection{Kịch bản hai: Triển khai ingress gateway cho các service}
+	\subsubsection{Mô tả kịch bản}
+	\pagebreak
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Pics/ingress-gateway}
+		\caption{\label{fig:ingress-gateway} Luồng truy cập của người dùng vào trong ứng dụng thông qua ingress-gateway.}
+		\label{fig:ingress-gateway}
+	\end{figure}
+	
+	\hspace{1.0cm}{Để giúp cho người dùng có thể truy cập được ứng dụng mà không cần sự đồng ý của Consul, thì chúng ta sẽ tiến hành tạo ra một trong những thành phần của Consul là ingress gateway. Ingress gateway ở đây sẽ đóng một vai trò là sẽ điều hướng toàn bộ yêu cầu vào và chuyển các yêu cầu đấy tới các service tương ứng. Vậy làm thế nào để tạo ra ingress gateway, làm sao để có thể điều hướng vào các dịch vụ tương ứng, chúng ta sẽ đến với phần thực nghiệm.}
+	
+	\subsubsection{Thực nghiệm}
+	\hspace{1.0cm}{Đầu tiên, để tạo ra ingress gateway, thì chúng ta cần cập nhật tệp tin values.yaml ở phần các bước triển khai. Chúng ta sẽ thêm vào một phần sau vào bên dưới tệp:}
+	\begin{lstlisting}[language=Bash]
+	ingressGateways:
+		enabled: true
+		defaults:
+			replicas: 1	
+			service:
+				type: LoadBalancer
+	\end{lstlisting}
+	\hspace{1.0cm}{Sau khi thêm vào, chúng ta sẽ chạy câu lệnh sau để update chart của Consul}
+	\begin{lstlisting}[language=Bash]
+	helm upgrade -n consul consul -f /c/Users/justo/Desktop/Helm-chart/nestjs-helm/consul/helm/values.yaml hashicorp/consul
+	\end{lstlisting}
+	\hspace{1.0cm}{Sau khi helm upgrade xong chart, thì chúng ta sẽ truy cập vào giao diện của Consul và xem kết quả:}
+	\pagebreak
+	\begin{figure}[h]
+	\centering
+	\includegraphics[width=1\linewidth]{Pics/localhost-8500}
+	\caption{\label{fig:localhost-8500} Ingress Gateway đã hiện bên trên giao diện.}
+	\label{fig:localhost-8500}
+	\end{figure}
+
+	\hspace{0.3cm}{Tiếp theo, chúng ta tiến tới cấu hình điều hướng cho người dùng có thể truy cập vào ứng dụng thông qua ingress gateway. Để làm được, chúng ta sẽ có một tệp tin cấu hình của ingress gateway, nội dung của tệp tin như sau:}
+	\begin{lstlisting}[language=Bash]
+		apiVersion: consul.hashicorp.com/v1alpha1
+		kind: IngressGateway
+		metadata:
+			name: ingress-gateway
+			namespace: consul
+		spec:
+			listeners:
+				- port: 8080
+				  protocol: http
+				  services:
+					- name: frontend
+					  hosts: ["localhost"]
+	\end{lstlisting}
+	\hspace{1.0cm}{Khi chúng ta có tệp tin, bắt đầu chạy lệnh để apply nội dung và lên trên UI của Consul để kiểm tra. Để vào xem thông tin, chúng ta vào Service -> Ingress-Gateway -> Upstream và kiểm tra:}
+	 \begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Pics/upstream}
+		\caption{\label{fig:upstream} Cấu hình điều hướng truy cập tới ứng dụng frontend.}
+		\label{fig:upstream}
+	\end{figure}
+	\hspace{0.3cm}{Như vậy, ứng dụng đã có thể truy cập thông qua ingress gateway. Để truy cập, chúng ta truy cập vào địa chỉ \textit{http://localhost:8080} để kiểm tra.}
+	 \begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Pics/localhost-8080}
+		\caption{\label{fig:localhost-8080} Dịch vụ frontend khi được mở thông qua ingress gateway.}
+		\label{fig:localhost-8080}
+	\end{figure}
+	\hspace{0.3cm}{Như vậy chúng ta đã cấu hình thành công để công khai dịch vụ ra ngoài thông qua ingress gateway.}
+	\subsubsection{Đánh giá}
+	\hspace{1.0cm}{Thông qua triển khai trên, chúng ta đã tiến hành tạo ra ingess gateway để công khai dịch vụ ra ngoài mà không cần phải được quyền cho phép của Consul. Tiếp theo, chúng ta sẽ đến phần điều tra. Khi mà ứng dụng của chúng ta có vấn đề, thì chúng ta cần phải điều tra những nguyên nhân gây ra vấn đề đó. Đó có thể là do Ingress gateway không hoạt động, hay các luật cấu hình sai. Để biết được, chúng ta đến phần tiếp theo, điều tra nguyên nhân gián đoạn của dịch vụ}
+	\subsection{Kịch bản ba: Điều tra nguyên nhân gián đoạn dịch vụ}
+	\subsubsection{Mô tả kịch bản}
+	\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Pics/metrics}
+	\caption{\label{fig:metrics} Đẩy metrics của proxy lên một Metrics DB.}
+	\label{fig:metrics}
+	\end{figure}
+	\hspace{1.0cm}{Ở phần này, chúng ta sẽ tiến hành đẩy các metrics của proxy lên một nơi có thể đọc được các thông số Metrics. Ở đây, chúng ta sẽ sử dụng Prometheus. Prometheus là một phần đi kèm luôn với chart của Consul. Nếu như chúng ta đã sử dụng Prometheus đã có sẵn, thì chúng ta sẽ không cần phải thêm vào chart và sẽ cấu hình Promtheus có sẵn để thu thập các metrics được đẩy ra bởi proxy. Ở phần thực nghiệm này, chúng ta sẽ sử dụng Prometheus của chart Consul để tiến hành thu thập dữ liệu.}
+	\subsubsection{Thực nghiệm}
+	\hspace{1.0cm}{Trước khi bắt đầu, chúng ta cần phải triển khai prometheus để thu thập dữ liệu. Để có prometheus, chúng ta sẽ cập nhật lại chart như sau:}
+	\begin{lstlisting}[language=Bash]
+	prometheus:
+		enabled: true
+	\end{lstlisting}
+	\hspace{1.0cm}{Tiếp đó, chúng ta bắt đầu cấu hình proxy để proxy có thể đẩy các metrics ra bên ngoài. Để cấu hình, tệp values.yaml chúng ta cần chỉnh sửa lại như sau:}
+	\begin{lstlisting}[language=Bash]
+	connectInject:
+		enabled: true
+		default: false
+		metrics:
+			defaultEnabled: true
+			defaultEnableMerging: true
+			defaultPrometheusScrapePort: 20200
+			defaultPrometheusScrapePath: "/metrics"
+			defaultMergedMetricsPort: 20100
+	\end{lstlisting}
+	\hspace{1.0cm}{Với cấu hình trên, chúng ta đã cấu hình đẩy các metrics ra bên ngoài với cổng 20220 và với path là /metrics. Prometheus của Consul sử dụng đã có cấu hình sẵn để thu thập dữ liệu từ cổng và đường dẫn kia nên chúng ta sẽ không cần phải cấu hình lại Prometheus. }
+	\hspace{0.3cm}{Tiếp theo, chúng ta sẽ cấu hình để hiển thị thông tin metrics trên UI của Consul. Để làm vậy, chúng ta tiếp tục cập nhật nội dung của tệp values.yaml thành như sau:}
+	\begin{lstlisting}[language=Bash]
+	ui:
+		enabled: true
+		service:
+			type: NodePort
+		metrics:
+			provider: "prometheus"
+			baseURL: http://prometheus-server
+	\end{lstlisting}
+	\hspace{1.0cm}{Cấu hình trên, do Promtheus được triển khai ở cùng với namespace Consul, nên chúng ta chỉ cần khai báo tên service của Promtheus là được. Sau đó, chúng ta tiến hành nâng cấp chart để chart nhận config mới với câu lệnh sau:}
+	\begin{lstlisting}[language=Bash]
+		helm upgrade -n consul consul -f /c/Users/justo/Desktop/Helm-chart/nestjs-helm/consul/helm/values.yaml hashicorp/consul
+	\end{lstlisting}
+	\hspace{1.0cm}{Vậy là chúng ta đã xong phần triển khai Prometheus cũng như tiến hành đẩy các metrics từ proxy lên Prometheus. Để kiểm tra, chúng ta sẽ port-forward }
+	\subsubsection{Đánh giá}
+	\section{Kết luận}
 	
 \end{document}
