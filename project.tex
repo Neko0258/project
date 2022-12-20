@@ -837,7 +837,68 @@
 	\subsection{Ủy quyền trong Consul}
 	\chapter{Triển khai Consul trên Kubernetes}
 	\section{Mô hình triển khai}
+	\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Pics/diagram}
+	\caption{\label{fig:diagram} Mô hình triển khai.}
+	\label{fig:diagram}
+	\end{figure}
 	\section{Các bước triển khai Consul trên Kubernetes}
+	\hspace{1.0cm}{Để triển khai Consul trên Kubernetes, chúng ta sẽ cần phải có những công cụ sau đây:\\}
+	\begin{itemize}
+		\item kubectl
+		\item helm
+		\item k9s
+	\end{itemize}
+	\hspace{0.3cm}{Dưới đây là các câu lệnh để triển khai Consul, chúng ta sẽ sử dụng Chart của Hashicorp cung cấp. Đầu tiên, chúng ta cần phải thêm nguồn chart vào trong dữ liệu Helm của chúng ta với câu lệnh sau:}
+	\begin{lstlisting}[language=Bash]
+	helm repo add hashicorp https://helm.releases.hashicorp.com
+	\end{lstlisting}
+	\hspace{1.0cm}{Tiếp theo, chúng ta sẽ cập nhật chart với câu lệnh: }
+	\begin{lstlisting}[language=Bash]
+	helm repo update
+	\end{lstlisting}
+	\hspace{1.0cm}{Sau đó, chúng ta tạo một tệp tin có tên là values.yaml, nội dung trong tệp tin như sau: }
+	\begin{lstlisting}[language=Bash]
+	global:
+		name: consul
+		datacenter: dc1
+	server:
+		replicas: 1
+		storage: 10Gi
+		storageClass: hostpath
+	connectInject:
+		enabled: true
+	ui:
+		enabled: true
+	controller:
+		enabled: true
+	\end{lstlisting}
+	\hspace{1.0cm}{Sau đó, chúng ta bắt đầu chạy câu lệnh sau:}
+	\begin{lstlisting}[language=Bash]
+	$ helm install -n consul consul -f consul/helm/consul/values.yaml hashicorp/consul
+	NAME: consul
+	LAST DEPLOYED: Tue Dec 20 20:12:02 2022   
+	NAMESPACE: consul
+	STATUS: deployed
+	REVISION: 1
+	NOTES:
+	Thank you for installing HashiCorp Consul!
+	
+	Your release is named consul.
+	
+	To learn more about the release, run:     
+	
+	$ helm status consul --namespace consul 
+	$ helm get all consul --namespace consul
+	
+	Consul on Kubernetes Documentation:       
+	https://www.consul.io/docs/platform/k8s   
+	
+	Consul on Kubernetes CLI Reference:       
+	https://www.consul.io/docs/k8s/k8s-cli
+	\end{lstlisting}
+	\hspace{1.0cm}{Vậy là chúng ta đã triển khai thành công Consul lên trên Kubernetes. Tiếp theo, chúng ta sẽ đến với các phần thực nghiệm.}
 	\section{Thực nghiệm}
 	\subsection{Kịch bản một: Mã hoá và thiết lập luật đường truyền giữa các micorserivce trong kubernetes}
 	\subsubsection{Mô hình kịch bản}
@@ -1240,8 +1301,169 @@
 	\begin{lstlisting}[language=Bash]
 		helm upgrade -n consul consul -f /c/Users/justo/Desktop/Helm-chart/nestjs-helm/consul/helm/values.yaml hashicorp/consul
 	\end{lstlisting}
-	\hspace{1.0cm}{Vậy là chúng ta đã xong phần triển khai Prometheus cũng như tiến hành đẩy các metrics từ proxy lên Prometheus. Để kiểm tra, chúng ta sẽ port-forward }
-	\subsubsection{Đánh giá}
-	\section{Kết luận}
+	\hspace{1.0cm}{Vậy là chúng ta đã xong phần triển khai Prometheus cũng như tiến hành đẩy các metrics từ proxy lên Prometheus. Để kiểm tra, chúng ta sẽ port-forward service của Prometheus để kiểm tra trên đường dẫn \textit{http://localhost:9090}.}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Pics/target}
+		\caption{\label{fig:target} Mục tiêu mà Prometheus đã thu thập được các metric.}
+		\label{fig:target}
+	\end{figure}
+	\hspace{0.3cm}{Vậy là chúng ta đã đẩy được metrics lên trên Prometheus. Tiếp theo, chúng ta sẽ kiểm tra các metrics được hiện ở UI của Consul.}
+	\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Pics/ui-metrics}
+	\caption{\label{fig:ui-metrics} Metrics hiện trên UI của Consul.}
+	\label{fig:ui-metrics}
+	\end{figure}
+	\hspace{0.3cm}{Như vậy, chỉ việc nhìn vào cấu trúc hướng đi của các dịch vụ, chúng ta có thể nhìn thấy được các thông tin cụ thể mà metrics cung cấp trên màn hình. Điều này sẽ giúp cho việc kiểm tra và đánh giá tổng quát một cách nhanh nhất khi chúng ta có nhiều service được triển khai trên Kubernetes. \\}
+	\hspace{0.3cm}{Tuy nhiên, khi mà dịch vụ không thể truy cập được, để điều tra nguyên nhân, chúng ta cần phải có một vài công cụ cụ thể hơn để có thể điều ra rõ nguồn gốc vấn đề. Để làm điều này, chúng ta sẽ triển khai thêm Jaeger, Jaeger là một công cụ giúp chúng ta điều tra cụ thể các luồng đi của dữ liệu. Để triển khai Jaeger, trước hết chúng ta cần cài đặt cert manager. Cert manager là một trong những điều kiện tiên quyết để cài đặt Jaeger. Để cài đặt Cert Manager, chúng ta cần chạy các lệnh sau:}
+	\begin{lstlisting}[language=Bash]
+	$ helm repo add jetstack https://charts.jetstack.io
 	
+	$ helm repo update
+	
+	$ kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.10.1/cert-manager.crds.yaml
+	
+	$ helm install \
+	cert-manager jetstack/cert-manager \
+	--namespace cert-manager \
+	--create-namespace \
+	--version v1.10.1 \
+	# --set installCRDs=true
+	\end{lstlisting}
+	\hspace{1.0cm}{Sau khi chạy thành công, Cert Manager đã được triển khai thành công trên kubernetes. Để kiểm tra, chúng ta sử dụng câu lệnh sau:}
+	\begin{lstlisting}[language=Bash]
+	$ kubectl get all -n cert-manager
+	NAME                                           READY   STATUS    RESTARTS       AGE
+	pod/cert-manager-5958fd9d8d-plfhj              1/1     Running   2 (3h1m ago)   2d22h
+	pod/cert-manager-cainjector-7999df5dbc-h5kfl   1/1     Running   4 (3h ago)     2d22h
+	pod/cert-manager-webhook-7f8f79d49c-qzkmk      1/1     Running   3 (3h1m ago)   2d22h
+	
+	NAME                           TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
+	service/cert-manager           ClusterIP   10.103.15.91   <none>        9402/TCP   2d22h
+	service/cert-manager-webhook   ClusterIP   10.111.32.49   <none>        443/TCP    2d22h
+	
+	NAME                                      READY   UP-TO-DATE   AVAILABLE   AGE
+	deployment.apps/cert-manager              1/1     1            1           2d22h
+	deployment.apps/cert-manager-cainjector   1/1     1            1           2d22h
+	deployment.apps/cert-manager-webhook      1/1     1            1           2d22h
+	
+	NAME                                                 DESIRED   CURRENT   READY   AGE
+	replicaset.apps/cert-manager-5958fd9d8d              1         1         1       2d22h
+	replicaset.apps/cert-manager-cainjector-7999df5dbc   1         1         1       2d22h
+	replicaset.apps/cert-manager-webhook-7f8f79d49c      1         1         1       2d22h
+	\end{lstlisting}
+	\hspace{1.0cm}{Tiếp theo đấy, chúng ta bắt đầu triển khai Jaeger. Để triển khai Jaeger, chúng ta cần chạy câu lệnh sau:}
+	\begin{lstlisting}[language=Bash]
+	$ kubectl create namespace observability
+	$ kubectl apply -f https://github.com/jaegertracing/jaeger-operator/releases/download/v1.40.0/jaeger-operator.yaml
+	customresourcedefinition.apiextensions.k8s.io/jaegers.jaegertracing.io created
+	serviceaccount/jaeger-operator created
+	role.rbac.authorization.k8s.io/leader-election-role created
+	role.rbac.authorization.k8s.io/prometheus created
+	clusterrole.rbac.authorization.k8s.io/jaeger-operator-metrics-reader created
+	clusterrole.rbac.authorization.k8s.io/manager-role created
+	clusterrole.rbac.authorization.k8s.io/proxy-role created
+	rolebinding.rbac.authorization.k8s.io/leader-election-rolebinding created
+	rolebinding.rbac.authorization.k8s.io/prometheus created
+	clusterrolebinding.rbac.authorization.k8s.io/jaeger-operator-proxy-rolebinding created
+	clusterrolebinding.rbac.authorization.k8s.io/manager-rolebinding created
+	service/jaeger-operator-metrics created
+	service/jaeger-operator-webhook-service created
+	deployment.apps/jaeger-operator created
+	certificate.cert-manager.io/jaeger-operator-serving-cert created
+	issuer.cert-manager.io/jaeger-operator-selfsigned-issuer created
+	mutatingwebhookconfiguration.admissionregistration.k8s.io/jaeger-operator-mutating-webhook-configuration created
+	validatingwebhookconfiguration.admissionregistration.k8s.io/jaeger-operator-validating-webhook-configuration created
+	\end{lstlisting}
+	\hspace{1.0cm}{Tiếp theo, chúng ta sẽ tạo 1 tệp tin để tạo 1 ứng dụng Jaeger, pod loại Jaeger, ứng dụng này sẽ thu thập dữ liệu được gửi lên từ ứng dụng frontend và backend. Nội dung của tệp tin như sau:}
+	\begin{lstlisting}[language=Bash]
+	apiVersion: jaegertracing.io/v1
+	kind: Jaeger
+	metadata:
+		name: jaeger
+	spec:
+		query:
+			serviceType: LoadBalancer
+		ingress:
+			enabled: false
+	\end{lstlisting}
+	\hspace{1.0cm}{Sau khi tạo xong, thì Jaeger sẽ tạo cho chúng ta một deployment và giúp chúng ta có UI để truy vấn các dữ liệu. Để truy cập được UI, chúng ta cần port-forward cổng 16686 và bắt đầu truy cập vào \textit{http://localhost:16686} để xem thông tin query.}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Pics/jaeger-ui}
+		\caption{\label{fig:jaeger-ui} UI của Jaeger.}
+		\label{fig:jaeger-ui}
+	\end{figure}
+	\hspace{0.3cm}{Tiếp theo, chúng ta tiến hành đẩy dữ liệu từ ứng dụng frontend, backend và Proxy lên Jaeger. Để làm được điều này, chúng ta cần can thiệp vào trong code của ứng dụng. Tuy nhiên, ứng dụng frontend và backend đã được cấu hình để có thể đẩy dữ liệu ứng dụng lên trên Jaeger nên chúng ta chỉ việc khai báo thêm biến môi trường cho ứng dụng và ứng dụng sẽ đẩy dữ liệu lên. Còn đối với Proxy, chúng ta cần cấu hình lại một chút như sau:}
+	\begin{lstlisting}[language=Bash]
+	apiVersion: consul.hashicorp.com/v1alpha1
+	kind: ProxyDefaults
+	metadata:
+		name: global
+		namespace: consul
+	spec:
+		config:
+			protocol: http
+			envoy_tracing_json: |
+			{
+				"http":{
+					"name":"envoy.tracers.zipkin",
+					"typedConfig":{
+						"@type":"type.googleapis.com/envoy.config.trace.v3.ZipkinConfig",
+						"collector_cluster":"jaeger_collector",
+						"collector_endpoint_version":"HTTP_JSON",
+						"collector_endpoint":"/api/v2/spans",
+						"shared_span_context":false
+					}
+				}
+			}
+			envoy_extra_static_clusters_json: |
+			{
+				"connect_timeout":"3.000s",
+				"dns_lookup_family":"V4_ONLY",
+				"lb_policy":"ROUND_ROBIN",
+				"load_assignment":{
+					"cluster_name":"jaeger_collector",
+					"endpoints":[
+					{
+						"lb_endpoints":[
+						{
+							"endpoint":{
+								"address":{
+									"socket_address":{
+										"address":"jaeger-collector.default",
+										"port_value":9411,
+										"protocol":"TCP"
+									}
+								}
+							}
+						}
+						]
+					}
+					]
+				},
+				"name":"jaeger_collector",
+				"type":"STRICT_DNS"
+			}
+	\end{lstlisting}
+	\hspace{1.0cm}{Sau khi apply lại, thì chúng ta sẽ lên giao diện của Jaeger và kiểm tra: \\}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Pics/jaeger-ingress-gateway}
+		\caption{\label{fig:jaeger-ingress-gateway} Proxy đẩy dữ liệu lên Jaeger.}
+		\label{fig:jaeger-ingress-gateway}
+	\end{figure}
+	\hspace{0.3cm}{Để điều tra, chúng ta sẽ ấn vào từng truy vấn cụ thể, và qua đấy, chúng ta sẽ biết được rằng nguyên nhân nào gây ra lỗi của ứng dụng.\\}
+	\pagebreak
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Pics/jaeger-error}
+		\caption{\label{fig:jaeger-error} Nguyên nhân lỗi đến từ backend.}
+		\label{fig:jaeger-error}
+	\end{figure}
+	\subsubsection{Đánh giá}
+	\hspace{0.3cm}{Vậy là chúng ta đã triển khai được hệ thống tracing và mở ra các metrics để có thể giúp chúng ta dễ dàng tiếp cận được những lỗi của ứng dụng. Tìm được nguyên nhân gây ra lỗi nhanh nhất có thể để làm giảm thời gian mất kết nối của hệ thống. Để triển khai phần này, thì sẽ tốn khá nhiều công sức, nhưng bù lại, khi chúng ta tìm nguyên nhân sẽ dễ dàng hơn rất nhiều vì chúng ta đã có đủ thông tin để tìm ra nguyên nhân gây ra lỗi.}
+	\section{Kết luận chương 3}
+	\hspace{1.0cm}{Qua chương 3, chúng ta đã thực hiện các phần thực nghiệm Consul trên Kubernetes. Qua các phần thực nghiệm này, chúng ta sẽ hiểu hơn về Consul hoạt động ra sao, vận hành như thế nào để giúp chúng ta có thể triển khai lên một cách chuẩn xác nhất và nhanh gọn nhất. Tuy nhiên, Consul vẫn nhiều tính năng mà chúng ta chưa triển khai vì phần này chúng ta chỉ tập chung vào tính năng service mesh trong consul. Vì vậy trong tương lai, chúng ta có thể tìm hiểu thêm các tính năng khác của consul và áp dụng được vào trong hệ thống kiến trúc của chúng ta.}
 \end{document}
