@@ -111,11 +111,17 @@
 	\textbf{Chúng em xin chân thành cảm ơn!}
 	\chapter*{\centering Lời mở đầu}
 	\addcontentsline{toc}{chapter}{Lời mở đầu}
-	\hspace{1cm}{Trong những năm gần đây, Kubernetes đã trở thành một trong những công cụ quản lý container phổ biến nhất. Điều này là do sự phát triển mạnh mẽ của Kubernetes, cũng như sự phổ biến của container. Trong các doanh nghiệp hiện nay, Kubernetes là một phần không thể thiếu được sử dụng để quản lý các ứng dụng container, cung cấp các dịch vụ như load balancing, autoscaling, logging, monitoring, backup và restore, cũng như quản lý các tài nguyên của các ứng dụng như CPU, Memory, Storage, Network. Tuy nhiên, việc sử dụng Kubernetes cũng có những hạn chế, đặc biệt là trong việc quản lý các cấu hình nhạy cảm của ứng dụng và các tài nguyên của ứng dụng. Vì vậy, trong đề tài này, chúng ta sẽ tìm hiểu về Vault, một công cụ quản lý secret phổ biến nhất hiện nay, được phát triển bởi HashiCorp. \\}
+	\hspace{1cm}{Nhiều năm trước, hầu hết các ứng dụng phần mềm đều được xây dựng với kiến trúc monolith hay còn gọi là kiến trúc 1 khối là mẫu thiết kế được dùng nhiều nhất trong giới lập trình web hiện nay bởi tính đơn giản của nó khi phát triển và khi triển khai. Các ứng dụng này chạy dưới dạng một tiến trình đơn lẻ hoặc số lượng nhỏ các tiến trình trên một số ít máy chủ. Chúng có khả năng cập nhật và nâng cấp chậm và yêu cầu nâng cấp thường xuyên. Trong trường hợp có sự cố như lỗi phần cứng hệ thống phần mềm này sẽ phải được di chuyển một cách thủ công sang các máy chủ còn hoạt động tốt.\\}
 	
-	{\hspace{0.3cm}Vault được sử dụng để quản lý các secret như username, password, token, key, certificate, API key, SSH key, license key, database connection và các thông tin khác. Vì vậy trong tương lai, Vault sẽ là một trong những công cụ quản lý secret không thể thiếu trong Kubernetes.\\}
+	\hspace{0.3cm}{Ngày nay các ứng dụng được xây dựng với kiến trúc lớn và phức tạp đang dần được chia thành các thành phần nhỏ hơn, có khả năng hoạt đông độc lập được gọi là microservices. Vì các Microservices tách biệt với nhau nên chúng có thể được phát triển, triển khai hay cập nhật và mở rộng quy mô một cách riêng lẻ. Nhờ khả năng này cho phép ta thay đổi các thành phần nhanh chóng và thường xuyên khi cần thiết để theo kịp với các yêu cầu thay đổi nhanh chóng thời nay.\\}
 	
-	\hspace{0.3cm}Với những lí do trên, bài toán đặt ra ở đây là làm sao để triển khai Vault trên cụm Kubernetes. Vậy nên, đề tài “Nghiên cứu giải pháp đảm bảo an toàn dữ liệu trên K8S” được thực hiện trong báo cáo có ý nghĩa khoa học và mang tính thực tiễn cao.\\
+	\hspace{0.3cm}{Nhưng với số lượng lớn các thành phần cũng như cơ sở dữ liệu việc cấu hình, quản lý và giữ hệ thống hoạt động trơn tru ngày càng trở nên khó khăn đặc biệt trong việc tối ưu hiệu quả sử dụng tài nguyên. Kubernetes ra đời để đáp ứng nhu cầu tự động hoá như lập lịch tự động, cấu hình tự động hay giám sát và xử lý lỗi.\\}
+	
+	\hspace{0.3cm}{Kubernetes cung cấp cho các nhà phát triển khả năng triển khai các ứng dụng một cách thường xuyên mà không cần thông qua nhóm vận hành. Không chỉ dừng lại ở đó Kuberbetes cũng giúp nhóm vận hành tự động theo dõi và khắc phục sự cố.\\}
+	
+	\hspace{0.3cm}{Ngày nay, Kubernetes đã trở thành một trong những công cụ quản lý container phổ biến nhất. Điều này là do sự phát triển mạnh mẽ của Kubernetes, cũng như sự phổ biến của container. Trong các doanh nghiệp hiện nay, Kubernetes là một phần không thể thiếu được sử dụng để quản lý các ứng dụng container, cung cấp các dịch vụ như load balancing, autoscaling, logging, monitoring, backup và restore, cũng như quản lý các tài nguyên của các ứng dụng như CPU, Memory, Storage, Network. Tuy nhiên, việc sử dụng Kubernetes cũng có những hạn chế, đặc biệt là trong việc quản lý các cấu hình nhạy cảm của ứng dụng và các tài nguyên của ứng dụng.\\}
+	
+	\hspace{0.3cm}{Đi cùng với sự phát triển lớn mạnh của kiến trúc Microservices cũng như Kubernetes đó là nhu cầu về việc đảm bảo tính an toàn cho các hệ thống này. Nhận thấy tầm quan trọng, thực tiễn và tính cấp thiết của sự bảo mật trong kiến trúc này, chúng em đã thực hiện báo cáo về giải pháp đảm bảo an toàn cho Microservices bằng Consul Service Mesh.}
 	
 	\chapter{Giới thiệu về Kurbenetes}
 	\section{Tổng quan về Kurbenetes}
@@ -767,15 +773,35 @@
 	\subsubsection{Proxy Sidecar}
 	\hspace{1cm}{Mỗi phiên bản dịch vụ, một phiên bản đang chạy cụ thể của một dịch vụ, có một proxy sidecar chuyên dụng. Trách nhiệm của proxy là chặn các yêu cầu đến và từ phiên bản dịch vụ của nó, đồng thời thực hiện các hành động theo yêu cầu như đã định cấu hình - ví dụ: mã hóa yêu cầu bằng TLS hoặc từ chối yêu cầu từ một số dịch vụ nhất định.\\}
 	
+
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Pics/example}
+		\caption{\label{fig:example} Một dịch vụ mới đang được bắt đầu trên một Node.}
+		\label{fig:example}
+	\end{figure}
+
 	\hspace{0.3cm}{Consul tự nó không phải là một proxy (Về mặt kỹ thuật, đó là do nó đi kèm với cái được gọi là proxy tích hợp, nhưng proxy này có tối thiểu chức năng và chỉ nên được sử dụng cho các trường hợp thử nghiệm nhỏ) Thay vào đó, Consul sử dụng một proxy gọi là Envoy. Envoy là một proxy nguồn mở được tạo tại Lyft. Nó hiện là một dự án CNCF (Cloud Native Computing Foundation) được nhiều service mesh sử dụng. Envoy được viết bằng C++ cho hiệu năng và có dung lượng bộ nhớ rất thấp. Điều này có nghĩa là nó có thể chạy bên cạnh tất cả các dịch vụ của bạn với tác động tối thiểu đến tài nguyên và độ trễ. Envoy hỗ trợ hàng trăm tính năng để cân bằng tải, khả năng quan sát, kiểm tra sức khỏe, v.v. Máy khách Consul định cấu hình Envoy qua API gRPC của nó.\\}
+
 	
 	\hspace{0.3cm}{Trên Kubernetes, sidecar proxy chạy dưới dạng các container riêng biệt trong các nhóm dịch vụ. Điều này đảm bảo rằng các bộ chứa dịch vụ có thể định tuyến đến các proxy sidecar của chúng trong mạng nhóm cục bộ. Trên máy ảo, proxy sidecar chạy dưới dạng các quy trình riêng biệt cho từng phiên bản dịch vụ trên máy ảo đó.\\}
 	
+
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Pics/example2}
+		\caption{\label{fig:example2} Client Consul cấu hình proxy backend.}
+		\label{fig:example2}
+	\end{figure}
+
 	\hspace{0.3cm}{Bây giờ bạn đã quen thuộc với máy chủ Consul, client và proxy sidecar, hãy xem qua một trường hợp sử dụng ví dụ để hiểu cách cả ba thành phần hoạt động cùng nhau.}
 	
 	\subsubsection{Trường hợp sử dụng ví dụ}
 	\hspace{1cm}{Hãy tưởng tượng một dịch vụ mới gọi là backend được bắt đầu trên một Node (xem bước 1 trong Hình 2.7). Tiếp theo, dịch vụ backend được đăng ký với địa chỉ IP của nó - ví dụ: 1.2.3.4 - vào ứng dụng client Consul trên Node đó (bước 2). Sau đó, ứng dụng client Consul đưa ra yêu cầu quay lại máy chủ Consul để thông báo cho họ biết rằng một dịch vụ mới có tên là backend đang chạy trên Node đó có địa chỉ 1.2.3.4 (bước 3). Các máy chủ Consul sau đó thêm dịch vụ đó vào danh mục (bước 4).\\}
 	
+
+	\begin{figure}[h]
+
 	\begin{figure}[p]
 		\centering
 		\includegraphics[width=0.7\linewidth]{Pics/example}
@@ -783,9 +809,16 @@
 		\label{fig:example}
 	\end{figure}
 	
+
+	\hspace{0.3cm}{Proxy của giao diện người dùng cần biết địa chỉ của dịch vụ backend để thực hiện yêu cầu. Để thực hiện điều này, ứng dụng client Consul trên cùng một nút với dịch vụ giao diện người dùng sẽ xem danh mục máy chủ Consul để biết các phiên bản mới của dịch vụ backend (bước 1 trong Hình 2.10). Khi một phiên bản mới của dịch vụ backend được đăng ký vào danh mục, máy chủ Consul sẽ gửi địa chỉ mới đến ứng dụng client Consul (bước 2). Sau đó, máy client Consul cập nhật cấu hình proxy của dịch vụ giao diện người dùng với địa chỉ mới cho dịch vụ backend (bước 3).\\}
+	
+
+	\begin{figure}[h]
+
 	\hspace{0.3cm}{Đồng thời, proxy cho dịch vụ backend khởi động. Proxy mở một kết nối tới client Consul cục bộ (xem bước 1 hình 2.8). Ứng dụng client Consul định cấu hình proxy và giữ kết nối mở để định cấu hình lại trong tương lai (bước 2).\\}
 	
 	\begin{figure}[p]
+
 		\centering
 		\includegraphics[width=0.7\linewidth]{Pics/example2}
 		\caption{\label{fig:example2} Client Consul cấu hình proxy backend.}
@@ -801,6 +834,229 @@
 		\label{fig:example3}
 	\end{figure}
 	
+
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Pics/example5}
+		\caption{\label{fig:example5} Các proxy Sidecar ghi lại lưu lượng trong và ngoài và tuân theo các quy tắc được cấu hình của chúng để hành động trên lưu lượng đó.}
+		\label{fig:example5}
+	\end{figure}
+	
+	\hspace{0.3cm}{Ví dụ này minh họa cách máy chủ Consul, client và proxy sidecar hoạt động cùng nhau. Máy chủ Consul và client giao tiếp để chia sẻ dữ liệu về cụm và định cấu hình proxy sidecar. Các proxy Sidecar nắm bắt lưu lượng truy cập vào và ra và tuân theo các quy tắc được định cấu hình của chúng để hành động trên lưu lượng đó, chẳng hạn như bằng cách định tuyến nó tới một proxy khác hoặc không cho phép lưu lượng vì nó không được phép.}
+	
+	\subsection{Consul so với servece mesh khác}
+	\hspace{1cm}{Có nhiều service mesh khác trên thị trường, chẳng hạn như Istio và Linkerd. Hầu hết các mắt service mesh đều tuân theo cùng một kiến trúc chung với một control plane quản lý các proxy sidecar. Consul là duy nhất trong số các mắt lưới khác ở chỗ control plane của nó có thể chạy hoàn toàn tách biệt với Kubernetes. Điều này có nghĩa là nếu bạn đang quản lý một cụm máy ảo thì bạn cũng không cần chạy Kubernetes.\\}
+	
+	\hspace{0.3cm}{Mỗi service mesh đều có ưu và nhược điểm tùy thuộc vào trường hợp sử dụng chính xác của bạn. Một cách tiếp cận tốt để chọn service mesh là tập trung vào ba trường hợp sử dụng hàng đầu của bạn, chẳng hạn như bảo mật, khả năng quan sát và hỗ trợ đa cụm, sau đó kiểm tra các service mesh phổ biến nhất và chọn một lưới mà bạn cảm thấy phù hợp nhất.}
+	
+	\subsection{Các tính năng khác của Consul}
+	\hspace{1cm}{Consul không chỉ là một mạng service mesh. Đây cũng là kho lưu trữ khóa/giá trị cho cấu hình dịch vụ và giải pháp khám phá dịch vụ DNS. Khi sử dụng DNS, không có proxy sidecar. Các yêu cầu được định tuyến trực tiếp giữa các dịch vụ. Điều này có nghĩa là không có tính năng mã hóa, quan sát hoặc kiểm soát lưu lượng tự động.\\}
+	
+	\hspace{0.3cm}{Cuốn sách này tập trung vào các tính năng service mesh của Consul, nhưng bạn có thể truy cập tài liệu của Consul để tìm hiểu thêm về các tính năng khác của nó.}
+	\section{Bảo mật trong Consul}
+	\hspace{1cm}{Trong thế giới ngày nay, an ninh là tối quan trọng. Những kẻ tấn công tinh vi liên tục thăm dò các lỗ hổng có thể dẫn đến việc dữ liệu người dùng bị đánh cắp và hệ thống bị gián đoạn. Những cuộc tấn công này có thể hủy hoại danh tiếng của công ty và tiêu tốn hàng trăm nghìn đô la. Đồng thời, việc bảo vệ chống lại các cuộc tấn công này đang trở nên khó khăn hơn khi việc triển khai microservice ngày càng lớn và phức tạp hơn - do đó làm tăng mục tiêu tấn công của chúng.\\}
+	
+	\hspace{0.3cm}{Có nhiều khía cạnh để bảo mật hệ thống của bạn và mặc dù service mesh không thể giải quyết tất cả các khía cạnh đó nhưng nó đóng một vai trò quan trọng. Service mesh thực hiện các cải tiến bảo mật thông qua proxy sidecar chặn tất cả lưu lượng truy cập vào và ra khỏi dịch vụ. Một service mesh có thể cung cấp:}
+	
+	\begin{itemize}
+		\item Mã hóa lưu lượng giữa các dịch vụ.
+		\item Thực thi các quy tắc về dịch vụ nào có thể giao tiếp với nhau và loại yêu cầu nào được phép - ví dụ: đường dẫn HTTP nào có thể được truy cập.
+		\item Một số giảm thiểu chống lại các cuộc tấn công từ chối dịch vụ bằng cách tăng độ tin cậy của dịch vụ.
+	\end{itemize}
+
+	\hspace{0.3cm}{Tuy nhiên, vì nó hoạt động ở cấp độ nền tảng nên service mesh không thể cung cấp:}
+	
+	\begin{itemize}
+		\item Tự động vá các thư viện dễ bị tấn công.
+		\item Loại bỏ các lỗi bảo mật trong mã code dịch vụ.
+		\item Xác thực và ủy quyền người dùng (ví dụ: xác thực mật khẩu).
+		\item Phát hiện xâm nhập (Phát hiện xâm nhập đang giám sát hoạt động đáng ngờ. Consul có thể giúp phát hiện xâm nhập vì nó cung cấp số liệu về các yêu cầu bị từ chối. Nếu một dịch vụ đột nhiên có nhiều yêu cầu bị từ chối, có khả năng kẻ tấn công đang cố truy cập dịch vụ đó).
+		\item Các cải tiến bảo mật cấp dịch vụ khác.
+	\end{itemize}
+
+	\hspace{0.3cm}{Các cải tiến bảo mật mà service mesh cung cấp - mã hóa lưu lượng giữa các dịch vụ và thực thi các quy tắc về dịch vụ nào có thể giao tiếp với nhau - là một phần của việc triển khai mô hình bảo mật được gọi là zero trust network.\\}
+	
+	\hspace{0.3cm}{Phần này bắt đầu với phần mô tả về mô hình zero trust network và lý do tại sao nó là một cải tiến so với mô hình cũ hơn. Sau đó, trình bày cách Consul triển khai zero trust network và mô tả mã hóa TLS.}
+	\subsection{Zero trust network trong Consul}
+	\hspace{1cm}{Kiến trúc an ninh mạng truyền thống là theo mô hình castle and moat. Trong mô hình castle and moat, các dịch vụ được triển khai trong một mạng riêng nội bộ (castle - lâu đài) không được kết nối với internet công cộng. Tường lửa (moat - hào nước) bảo vệ quyền truy cập vào mạng nội bộ (Tường lửa là phần mềm hoặc phần cứng kiểm soát quyền truy cập ở rìa mạng - nơi các hệ thống được kết nối với cả mạng riêng và mạng công cộng). Bộ cân bằng tải được triển khai bên ngoài mạng riêng và được phép truy cập thông qua tường lửa. Vì tường lửa đã được đặt sẵn, giả định rằng mọi thứ chạy bên trong mạng nội bộ đều có thể tin cậy được. Vì lý do này, không cần mã hóa, xác thực hoặc ủy quyền giữa các dịch vụ nội bộ.\\}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.5\linewidth]{Pics/castle_and_moat_modal}
+		\caption{\label{fig:castleandmoatmodal} Định tuyến bên trong kiến trúc castle and moat.}
+		\label{fig:castleandmoatmodal}
+	\end{figure}
+	
+	\hspace{0.3cm}{Hình 2.12 cho thấy lưu lượng truy cập được định tuyến như thế nào qua kiến trúc castle and moat. Ở bước 1, yêu cầu của người dùng được chuyển đến bộ cân bằng tải. Bộ cân bằng tải chuyển tiếp yêu cầu qua tường lửa tới một dịch vụ đang chạy trong mạng nội bộ đáng tin cậy (bước 2). Dịch vụ đó thực hiện cuộc gọi đến các dịch vụ upstream của nó (bước 3). Các cuộc gọi này không được mã hóa và các dịch vụ upstream không kiểm tra ủy quyền vì các cuộc gọi đến từ bên trong mạng nội bộ đáng tin cậy.\\}
+	
+	\hspace{0.3cm}{Vấn đề với mô hình castle and moat là những kẻ tấn công giành được quyền truy cập vào toàn bộ hệ thống nếu chúng xâm phạm bất kỳ điểm nào trong mạng nội bộ, như trong Hình 2.13. Điều này có nghĩa là bảo mật của hệ thống chỉ tốt bằng liên kết yếu nhất của nó.\\}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.5\linewidth]{Pics/threat_of_castle_and_moat}
+		\caption{\label{fig:threatofcastleandmoat} Trong kiến trúc castle and moat, nếu kẻ tấn công xâm phạm một dịch vụ, chúng có thể yêu cầu tất cả các dịch vụ và cơ sở dữ liệu bên trong mạng.}
+		\label{fig:threatofcastleandmoat}
+	\end{figure}
+	
+	\hspace{0.3cm}{Đây không phải là một điểm yếu lý thuyết. Vào năm 2015, tin tặc đã đánh cắp hàng triệu hồ sơ nhạy cảm về nhân viên chính phủ từ Văn phòng Quản lý Nhân sự Hoa Kỳ (OPM). Những kẻ tấn công đã giành được quyền truy cập bằng cách xâm nhập vào hệ thống của một công ty hợp đồng có máy chủ có toàn quyền truy cập vào mạng OPM. Từ đó, họ có thể tự do trích xuất dữ liệu từ các máy chủ OPM.\\}
+	
+	\hspace{0.3cm}{Điểm yếu của hệ thống castle and moat là không thể chấp nhận được đối với hầu hết các công ty, vì vậy các kỹ sư bảo mật đề xuất một mô hình khác: zero trust network.\\}
+	
+	\hspace{0.3cm}{Trong zero trust network, bạn cho rằng mạng nội bộ bị xâm phạm. Do đó, các dịch vụ không hoàn toàn tin tưởng các yêu cầu đơn giản chỉ vì chúng đến từ bên trong mạng nội bộ. Thay vào đó, các dịch vụ thực hiện mã hóa, xác thực và ủy quyền cho tất cả các yêu cầu.}
+	
+	\subsubsection{Mã hóa}
+	\hspace{1cm}{Quá trình sửa đổi dữ liệu sao cho bên thứ ba không thể đọc dữ liệu gốc chưa sửa đổi, nhưng người nhận thì có thể. Trong mạng máy tính, quy trình mã hóa TLS thường được sử dụng để đảm bảo rằng các bên thứ ba không thể chặn và đọc dữ liệu được gửi giữa người dùng và trang web mà họ đang xem. TLS được sử dụng bí mật khi bạn truy cập các trang web https://.}
+	
+	\subsubsection{Xác thực}
+	\hspace{1cm}{Quá trình xác thực rằng một thực thể là người đã được xác minh, công nhận. Ví dụ: nếu người dùng tuyên bố là người dùng quản trị, thì xác thực là quá trình kiểm tra xem mật khẩu họ cung cấp có khớp với mật khẩu dự kiến hay không. Sau khi một thực thể được xác thực, bạn vẫn cần kiểm tra xem họ có được phép thực hiện hành động mà họ đang cố thực hiện hay không.}
+	
+	\subsubsection{Ủy quyền}
+	\hspace{1cm}{Quá trình xác thực rằng một thực thể được xác thực được phép thực hiện một hành động cụ thể nào đó hay không. Ví dụ: người dùng đã đăng nhập có thể được xác thực nhưng có lẽ họ không được phép xem bảng quản trị.}
+
+	\subsection{Mã hóa trong Consul}
+	\hspace{1cm}{Mã hóa là cần thiết trong mạng zero trust network vì dịch vụ bị xâm phạm có thể đọc lưu lượng được truyền giữa các dịch vụ khác- điều này được gọi là traffic sniffng hoặc tấn công trung gian (xem Hình 2.14). (Có nhiều cơ chế để một dịch vụ bị xâm nhập chặn bắt lưu lượng truy cập. Nếu dịch vụ bị xâm nhập nằm trên cùng một node với một dịch vụ khác, dịch vụ đó có thể có quyền kiểm tra lưu lượng mạng của các quy trình khác. Hoặc một dịch vụ bị xâm phạm có thể sử dụng một kỹ thuật gọi là giả mạo Giao thức phân giải địa chỉ (ARP) để khiến một dịch vụ khác gửi nhầm lưu lượng truy cập của nó đến dịch vụ bị xâm phạm thay vì đích dự kiến).\\}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Pics/sniffing}
+		\caption{\label{fig:sniffing} Một dịch vụ bị xâm nhập có thể chặn truy tìm được gửi giữa hai dịch vụ khác.}
+		\label{fig:sniffing}
+	\end{figure}
+	
+	\hspace{0.3cm}{Mã hóa ngăn chặn các cuộc tấn công trung gian vì những kẻ tấn công không thể đọc dữ liệu được gửi giữa hai dịch vụ. Chỉ dịch vụ đích mới có thể giải mã dữ liệu. Như thể hiện trong Hình 2.13, nếu Bob là dịch vụ duy nhất có khả năng giải mã lưu lượng truy cập từ dịch vụ Alice, thì việc kẻ tấn công chặn lưu lượng cũng không thành vấn đề.\\}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Pics/encrypt_prevent_sniffing}
+		\caption{\label{fig:encryptpreventsniffing} Dữ liệu điện tử hiện đã được mã hóa, do đó, ngay cả khi dịch vụ bị xâm phạm sniffing, chúng cũng không thể lấy được nội dung gốc.}
+		\label{fig:encryptpreventsniffing}
+	\end{figure}
+	
+	\hspace{0.3cm}{Consul sử dụng mã hóa TLS để mã hóa lưu lượng giữa các dịch vụ.}
+	
+	\subsubsection{Mã hóa TLS}
+	\hspace{1cm}{Mã hóa TLS có ba bước (xem Hình 2.16 để biết minh họa):}
+	\begin{enumerate}
+	\item Dịch vụ nguồn và đích đồng ý về khóa mã hóa.
+	\item Dịch vụ nguồn mã hóa tin nhắn của nó bằng khóa đã thỏa thuận và gửi tin nhắn được mã hóa đến dịch vụ đích.
+	\item Dịch vụ đích giải mã tin nhắn bằng khóa đã thỏa thuận.
+	\end{enumerate}
+
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Pics/TLS}
+		\caption{\label{fig:tls} Một minh họa về mã hóa TLS.}
+		\label{fig:tls}
+	\end{figure}
+	
+	\hspace{0.3cm}{Miễn là những kẻ tấn công trung gian không biết khóa mã hóa, chúng không thể giải mã tin nhắn. Loại mã hóa này được gọi là mã hóa đối xứng vì cả hai bên đều biết khóa mã hóa.\\}
+	
+	\hspace{0.3cm}{Nhưng làm thế nào để khóa mã hóa đối xứng được thỏa thuận mà không có kẻ tấn công chặn nó? Đây là lúc mật mã khóa công khai phát huy tác dụng.\\}
+	
+	\hspace{0.3cm}{Mật mã khóa công khai là một phương pháp mã hóa sử dụng các cặp khóa: khóa bí mật và khóa công khai. Các khóa được liên kết về mặt toán học sao cho các thông báo được mã hóa bằng khóa công khai chỉ có thể được giải mã bằng khóa bí mật. Mật mã khóa công khai cho phép cả hai dịch vụ đồng ý với khóa mã hóa đối xứng mà khóa đó không được gửi qua mạng, nơi khóa có thể bị đánh cắp.\\}
+	
+	\hspace{0.3cm}{Hãy xem qua một ví dụ sử dụng hai dịch vụ tưởng tượng, Alice và Bob, muốn đồng ý về một khóa mã hóa đối xứng:}
+	
+	\begin{enumerate}
+	\item Dịch vụ Alice tạo hai khóa, một khóa bí mật có tên alice-priv và một khóa công khai có tên alice-pub.
+	\item Dịch vụ Alice gửi khóa công khai của nó - alice-pub đến dịch vụ Bob. Khóa được gửi dưới dạng văn bản rõ để kẻ tấn công có thể nhìn thấy khóa.
+	\item Dịch vụ Bob cũng làm như vậy. Nó tạo ra hai khóa, bob-priv và bob-pub, đồng thời gửi khóa bob-pub cho Alice. Một lần nữa, kẻ tấn công có thể thấy khóa bob-pub.
+	\item Ngay bây giờ Alice sẵn sàng gửi khóa mã hóa đối xứng cho Bob. Alice mã hóa khóa mã hóa đối xứng bằng khóa công khai của Bob - bob-pub.
+	\item Alice gửi thông điệp được mã hóa này cho Bob. Một lần nữa, kẻ tấn công có thể nhìn thấy thông điệp được mã hóa này, nhưng điều kỳ diệu của mật mã khóa công khai là kẻ tấn công không thể giải mã thông điệp bằng các khóa công khai alice-pub hoặc bob-pub. Thuật toán sử dụng để mã hóa thông điệp được thiết kế sao cho chỉ khóa bí mật của Bob (bob-priv) mới có thể giải mã nó.
+	\item Bob nhận được thông điệp được mã hóa và sử dụng khóa riêng của nó - bob-priv để giải mã.
+	\item Giờ đây, khóa mã hóa đối xứng đã được thỏa thuận một cách an toàn, Alice và Bob có thể tự do gửi thêm thông điệp bằng cách mã hóa chúng khóa mã hóa đối xứng.
+	\end{enumerate}
+
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Pics/public-key_cryptography}
+		\caption{\label{fig:public-keycryptography} Sơ đồ mật mã khóa công khai.}
+		\label{fig:public-keycryptography}
+	\end{figure}
+	
+	\hspace{0.3cm}{Vì lý do hiệu suất, mật mã khóa công khai chỉ được sử dụng khi bắt đầu kết nối TLS để đồng ý một cách an toàn về khóa mã hóa đối xứng. Từ đó trở đi, khóa mã hóa đối xứng đó được sử dụng để mã hóa tất cả dữ liệu được gửi giữa hai dịch vụ.\\}
+	
+	\hspace{0.3cm}{Đó chính là cách hoạt động của mã hóa TLS, Consul sử dụng TLS để mã hóa lưu lượng service mesh.}
+	
+	\subsubsection{Mã hóa trong Consul}
+	\hspace{1cm}{Mã hóa TLS trong Consul được bật theo mặc định. Khi một dịch vụ đưa ra yêu cầu thông qua proxy sidecar của nó, proxy sẽ tự động mã hóa yêu cầu đó bằng TLS. Dịch vụ có thể tiếp tục thực hiện các yêu cầu không được mã hóa và proxy đảm bảo các yêu cầu đó được mã hóa trước khi chúng rời khỏi mạng cục bộ.\\}
+	
+	\hspace{0.3cm}{Quá trình này được thể hiện trong Hình 2.18. Ở bước 1, Consul cung cấp khóa công khai và khóa bí mật cho từng proxy. Khi giao diện người dùng gửi một yêu cầu không được mã hóa đến chương trình backend, thì yêu cầu đó sẽ bị chặn bởi proxy của giao diện người dùng (bước 2) và mã hóa yêu cầu đó trước khi chuyển tiếp đến chương trình backend (bước 3). Ở phía bên nhận, proxy của chương trình backend sẽ chặn yêu cầu (bước 4) và giải mã nó trước khi chuyển tiếp đến dịch vụ đích (bước 5).\\}
+	
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.7\linewidth]{Pics/Sidecar_proxies_automatically_encrypt}
+		\caption{\label{fig:sidecarproxiesautomaticallyencrypt} Sidecar proxy tự động mã hóa lưu lượng bằng TLS.}
+		\label{fig:sidecarproxiesautomaticallyencrypt}
+	\end{figure}
+	
+	\hspace{0.3cm}{Với cơ chế này, các dịch vụ không cần phải sửa đổi để sử dụng TLS - tất cả đều diễn ra tự động mà chúng không hề hay biết.\\}
+	
+	\hspace{0.3cm}{Đó chính xác là cách Consul thực hiện mã hóa. Mã hóa là điều cần thiết trong một zero trust network, nhưng nó vẫn không đủ. Nếu không có xác thực và ủy quyền, một dịch vụ bị xâm phạm vẫn có thể thực hiện các yêu cầu thông qua proxy sidecar của nó tới bất kỳ dịch vụ nào trong mạng.}
+	
+	\subsection{Xác thực trong Consul}
+	\hspace{1cm}{Xác thực là quá trình xác minh rằng ai đó là người mà đã được xác minh; đó là về việc xác minh danh tính. Trong mạng dịch vụ, điều này có hai phần: dịch vụ nguồn phải xác minh rằng dịch vụ đích thực sự là dịch vụ mà nó muốn giao tiếp và dịch vụ đích phải xác minh rằng dịch vụ nguồn thực sự là dịch vụ mà nó yêu cầu.\\}
+	
+	\hspace{0.3cm}{Cụ thể, nếu giao diện người dùng đang gọi phần backend, thì giao diện người dùng cần đảm bảo rằng nó thực sự đang nói chuyện với phần backend. Nếu nó không kiểm tra, thì nó có thể đang gửi yêu cầu của mình tới kẻ tấn công. Backend cũng cần xác minh dịch vụ nào đang thực hiện yêu cầu để có thể kiểm tra xem dịch vụ đó có được phép giao tiếp với nó hay không.\\}
+	
+	\hspace{0.3cm}{Consul cũng tận dụng TLS để thực hiện xác thực. Khi các dịch vụ trao đổi khóa công khai của họ, họ thực sự trao đổi chứng chỉ. Chứng chỉ này chứa khóa công khai và thông tin về dịch vụ, chẳng hạn như ID của nó.\\}
+	
+	\hspace{0.3cm}{Đây là các bước liên quan đến xác thực TLS (xem Hình 2.19 để minh họa):}
+	
+	\begin{enumerate}
+	\item Consul cấp chứng chỉ công khai và khóa bí mật cho từng dịch vụ. Được mã hóa trong chứng chỉ công khai là ID của dịch vụ đó.
+	\item Trong quá trình trao đổi khóa, chứng chỉ công khai cho mỗi dịch vụ được trao đổi.
+	\item Mỗi dịch vụ kiểm tra chứng chỉ công khai của dịch vụ kia và đảm bảo rằng ID dịch vụ là những gì được mong đợi. Ví dụ: dịch vụ giao diện người dùng sẽ xác minh rằng chứng chỉ dành cho dịch vụ backend và dịch vụ backend sẽ xác minh rằng chứng chỉ dành cho dịch vụ giao diện người dùng.
+	\item Nếu danh tính được xác minh, yêu cầu sẽ tiếp tục.
+	\end{enumerate}
+
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Pics/TLS_provide_authentication}
+		\caption{\label{fig:tlsprovideauthentication} TLS được sử dụng để cung cấp xác thực.}
+		\label{fig:tlsprovideauthentication}
+	\end{figure}
+	
+	\hspace{0.3cm}{Chúng ta có thể tự hỏi điều gì ngăn kẻ tấn công tạo chứng chỉ công khai của riêng chúng để mạo danh bất kỳ dịch vụ nào. Để ngăn chặn điều này, Consul hoạt động như một cơ quan cấp chứng chỉ.\\}
+	
+	\hspace{0.3cm}{Cơ quan cấp chứng chỉ là một thực thể cấp chứng chỉ được ký bằng mật mã sao cho chúng chỉ có thể đến từ cơ quan cấp chứng chỉ đó. Cơ quan cấp chứng chỉ cũng có chứng chỉ công khai được gọi là chứng chỉ của cơ quan cấp chứng chỉ (chứng chỉ CA). Khi xuất trình chứng chỉ công khai của dịch vụ - ví dụ: chứng chỉ backend - bên thứ ba có thể sử dụng chứng chỉ CA để kiểm tra xem chứng chỉ công khai có được ký bởi cơ quan cấp chứng chỉ đó hay không.\\}
+	
+	\hspace{0.3cm}{Cụ thể, ngoài chứng chỉ công khai và khóa bí mật mà Consul cấp cho từng dịch vụ, Consul còn cấp cho từng dịch vụ chứng chỉ CA của mình. Sau đó, chứng chỉ CA này có thể được sử dụng để xác minh rằng Consul thực sự đã cấp chứng chỉ công khai và việc tin cậy ID dịch vụ được mã hóa bên trong là an toàn.\\}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Pics/frontend_talk_to_backend_securely}
+		\caption{\label{fig:frontendtalktobackendsecurely} Quy trình khi giao diện người dùng giao tiếp với phần backend một cách an toàn.}
+		\label{fig:frontendtalktobackendsecurely}
+	\end{figure}
+	
+	\hspace{0.3cm}{Bạn có thể xem các chứng chỉ công khai của từng dịch vụ bằng công cụ openssl.}
+	\subsection{Ủy quyền trong Consul}
+	\hspace{1cm}{Ủy quyền là quá trình xác định xem một thực thể được xác thực có được phép thực hiện một hành động nhất định hay không. Ví dụ: dịch vụ này có được phép thực hiện các yêu cầu đối với dịch vụ đó hay được phép truy cập vào một đường dẫn HTTP cụ thể không?\\}
+	
+	\hspace{0.3cm}{Consul thực hiện ủy quyền thông qua hệ thống chủ đích của nó. Chủ đích là các quy tắc chi phối các dịch vụ nào được phép giao tiếp.\\}
+	
+	\hspace{0.3cm}{Mọi chủ đích đều có nguồn gốc và đích đến. Ví dụ: một chủ đích có thể cho phép một giao diện người dùng dịch vụ cụ thể (nguồn) kết nối với một dịch vụ backend cụ thể (đích). Ngoài ra, ký tự đại diện có thể được sử dụng làm nguồn hoặc đích, chẳng hạn như cho phép một cổng vào kết nối với bất kỳ dịch vụ nào hoặc bất kỳ dịch vụ nào kết nối với bất kỳ dịch vụ nào khác.\\}
+	
+	\hspace{0.3cm}{Ngoài việc chỉ định các quy tắc dựa trên dịch vụ nguồn và đích, bạn có thể sử dụng các chủ đích để kiểm soát các phương thức, đường dẫn và tiêu đề HTTP hoặc gRPC nào được ủy quyền. Consul gọi những chủ đích này là nhận biết ứng dụng vì chúng liên quan đến cách ứng dụng thực sự hoạt động. Ví dụ: bạn có thể tạo một chủ đích cho phép cổng vào truy cập vào bất kỳ đường dẫn nào trên dịch vụ giao diện người dùng ngoại trừ /admin.\\}
+	
+	\hspace{0.3cm}{Cơ chế thực thi chủ đích như sau:}
+	
+	\begin{enumerate}
+	\item Dịch vụ nguồn gửi yêu cầu đến dịch vụ đích.
+	\item Proxy của dịch vụ đích xác minh chứng chỉ công khai của dịch vụ nguồn và trích xuất tên dịch vụ từ ID.
+	\item Proxy của dịch vụ đích kiểm tra danh sách các chủ đích của nó để đảm bảo rằng dịch vụ nguồn được phép thực hiện kết nối.
+	\item Nếu đã đặt chủ đích nhận biết ứng dụng, proxy của dịch vụ đích cũng xác minh rằng yêu cầu cụ thể đó được cho phép.
+	\end{enumerate}
+
+	\chapter{Triển khai Consul trên Kubernetes}
+	\section{Mô hình triển khai}
+	\section{Các bước triển khai Consul trên Kubernetes}
+	\section{Thực nghiệm}
+	\subsection{Kịch bản một: Mã hoá và thiết lập luật đường truyền giữa các micorserivce trong kubernetes}
+	\subsubsection{Mô hình kịch bản}
+	 \begin{figure}[h]
+
 	\hspace{0.3cm}{Proxy của giao diện người dùng cần biết địa chỉ của dịch vụ backend để thực hiện yêu cầu. Để thực hiện điều này, ứng dụng client Consul trên cùng một nút với dịch vụ giao diện người dùng sẽ xem danh mục máy chủ Consul để biết các phiên bản mới của dịch vụ backend (bước 1 trong Hình 2.10). Khi một phiên bản mới của dịch vụ backend được đăng ký vào danh mục, máy chủ Consul sẽ gửi địa chỉ mới đến ứng dụng client Consul (bước 2). Sau đó, máy client Consul cập nhật cấu hình proxy của dịch vụ giao diện người dùng với địa chỉ mới cho dịch vụ backend (bước 3).\\}
 	
 	\begin{figure}[p]
